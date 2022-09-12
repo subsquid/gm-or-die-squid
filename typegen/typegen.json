@@ -1,0 +1,22 @@
+{
+  "outDir": "../src/types",
+  "specVersions": "https://gmordie.archive.subsquid.io/graphql",
+  "events": [
+    "Tokens.Endowed",
+    "Tokens.DustLost",
+    "Tokens.Reserved",
+    "Tokens.Unreserved",
+    "Tokens.ReserveRepatriated",
+    "Tokens.BalanceSet",
+    "Tokens.TotalIssuanceSet",
+    "Tokens.Withdrawn",
+
+    "Currencies.MorningStarted",
+    "Currencies.MidOneStarted",
+    "Currencies.MidTwoStarted",
+    "Currencies.NightStarted",
+    "Currencies.FrenBurned"
+  ],
+  "calls": true,
+  "storage": true
+}
