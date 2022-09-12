@@ -2,7 +2,7 @@ version: "3"
 
 services:
   db:
-    container_name: subsquid_db
+    container_name: gm_or_die_tokens_db
     image: postgres:14
     environment:
       POSTGRES_DB: squid

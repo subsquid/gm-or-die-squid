@@ -1,5 +1,5 @@
 {
-  "name": "kusama-transfers",
+  "name": "gm-or-die-tokens",
   "private": true,
   "engines" : { 
     "node" : ">=16"
