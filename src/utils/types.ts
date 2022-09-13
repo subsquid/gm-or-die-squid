@@ -4,19 +4,13 @@ import { Account } from '../model';
 type InferCoinName<T> = T extends { __kind: infer A } ? A : never;
 export type CoinName = InferCoinName<Pick<Coooooins, '__kind'>>;
 
-export enum TokenId {
-  FREN = 'FREN',
-  GM = 'GM',
-  GN = 'GN'
-}
-
 export type BurnedReward = Exclude<CoinName, 'FREN'> | null;
 
 export enum BlockEventName {
   TRANSFER = 'TRANSFER',
   FREN_BURNED = 'FREN_BURNED'
 }
-export interface TransferEvent {
+export interface TransferEventData {
   id: string;
   blockNumber: number;
   timestamp: Date;
@@ -28,12 +22,12 @@ export interface TransferEvent {
   currencyId: CoinName;
 }
 
-export interface FrenBurnedEvent {
+export interface FrenBurnedEventData {
   id: string;
   blockNumber: number;
   timestamp: Date;
   extrinsicHash?: string;
-  account: string;
-  burnedAmount: BigInt;
+  accountId: string;
+  burnedAmount: bigint;
   burnedFor: BurnedReward;
 }

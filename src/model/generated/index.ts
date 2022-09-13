@@ -1,5 +1,5 @@
 export * from "./account.model"
-export * from "./token.model"
 export * from "./transfer.model"
+export * from "./_currency"
 export * from "./frenBurned.model"
-export * from "./_burnReward"
+export * from "./_burnedReward"

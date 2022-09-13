@@ -1,7 +1,7 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_} from "typeorm"
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
-import {BurnReward} from "./_burnReward"
+import {BurnedReward} from "./_burnedReward"
 
 @Entity_()
 export class FrenBurned {
@@ -33,5 +33,5 @@ export class FrenBurned {
   burnedAmount!: bigint
 
   @Column_("varchar", {length: 2, nullable: true})
-  burnedFor!: BurnReward | undefined | null
+  burnedFor!: BurnedReward | undefined | null
 }

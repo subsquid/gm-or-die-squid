@@ -1,4 +1,4 @@
-export enum BurnReward {
+export enum BurnedReward {
   GM = "GM",
   GN = "GN",
 }

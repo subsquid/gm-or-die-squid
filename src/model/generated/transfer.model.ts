@@ -1,7 +1,7 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
-import {Token} from "./token.model"
+import {Currency} from "./_currency"
 
 @Entity_()
 export class Transfer {
@@ -32,9 +32,8 @@ export class Transfer {
   @ManyToOne_(() => Account, {nullable: true})
   to!: Account
 
-  @Index_()
-  @ManyToOne_(() => Token, {nullable: true})
-  token!: Token
+  @Column_("varchar", {length: 4, nullable: false})
+  currency!: Currency
 
   @Index_()
   @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
