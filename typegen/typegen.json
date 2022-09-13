@@ -3,19 +3,16 @@
   "specVersions": "https://gmordie.archive.subsquid.io/graphql",
   "events": [
     "Tokens.Endowed",
-    "Tokens.DustLost",
-    "Tokens.Reserved",
-    "Tokens.Unreserved",
-    "Tokens.ReserveRepatriated",
-    "Tokens.BalanceSet",
-    "Tokens.TotalIssuanceSet",
-    "Tokens.Withdrawn",
+    "Tokens.Transfer",
 
-    "Currencies.MorningStarted",
-    "Currencies.MidOneStarted",
-    "Currencies.MidTwoStarted",
-    "Currencies.NightStarted",
-    "Currencies.FrenBurned"
+    "Currencies.FrenBurned",
+
+    "Balances.Transfer",
+
+    "Identity.IdentitySet",
+    "Identity.IdentityKilled",
+    "Identity.IdentityCleared",
+    "Identity.JudgementGiven"
   ],
   "calls": true,
   "storage": true

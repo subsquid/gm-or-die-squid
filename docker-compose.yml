@@ -2,8 +2,8 @@ version: '3'
 
 services:
   db:
-    container_name: squid_db
-    image: postgres:14
+    container_name: gmordie_squid_db
+    image: postgres:12
     environment:
       #      POSTGRES_DB: squid
       #      POSTGRES_PASSWORD: squid

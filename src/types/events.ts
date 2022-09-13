@@ -2,6 +2,35 @@ import assert from 'assert'
 import {Chain, ChainContext, EventContext, Event, Result} from './support'
 import * as v3 from './v3'
 
+export class BalancesTransferEvent {
+  private readonly _chain: Chain
+  private readonly event: Event
+
+  constructor(ctx: EventContext)
+  constructor(ctx: ChainContext, event: Event)
+  constructor(ctx: EventContext, event?: Event) {
+    event = event || ctx.event
+    assert(event.name === 'Balances.Transfer')
+    this._chain = ctx._chain
+    this.event = event
+  }
+
+  /**
+   * Transfer succeeded.
+   */
+  get isV3(): boolean {
+    return this._chain.getEventHash('Balances.Transfer') === '0ffdf35c495114c2d42a8bf6c241483fd5334ca0198662e14480ad040f1e3a66'
+  }
+
+  /**
+   * Transfer succeeded.
+   */
+  get asV3(): {from: Uint8Array, to: Uint8Array, amount: bigint} {
+    assert(this.isV3)
+    return this._chain.decodeEvent(this.event)
+  }
+}
+
 export class CurrenciesFrenBurnedEvent {
   private readonly _chain: Chain
   private readonly event: Event
@@ -25,7 +54,7 @@ export class CurrenciesFrenBurnedEvent {
   }
 }
 
-export class CurrenciesMidOneStartedEvent {
+export class IdentityIdentityClearedEvent {
   private readonly _chain: Chain
   private readonly event: Event
 
@@ -33,120 +62,28 @@ export class CurrenciesMidOneStartedEvent {
   constructor(ctx: ChainContext, event: Event)
   constructor(ctx: EventContext, event?: Event) {
     event = event || ctx.event
-    assert(event.name === 'Currencies.MidOneStarted')
-    this._chain = ctx._chain
-    this.event = event
-  }
-
-  get isV3(): boolean {
-    return this._chain.getEventHash('Currencies.MidOneStarted') === '01f2f9c28aa1d4d36a81ff042620b6677d25bf07c2bf4acc37b58658778a4fca'
-  }
-
-  get asV3(): null {
-    assert(this.isV3)
-    return this._chain.decodeEvent(this.event)
-  }
-}
-
-export class CurrenciesMidTwoStartedEvent {
-  private readonly _chain: Chain
-  private readonly event: Event
-
-  constructor(ctx: EventContext)
-  constructor(ctx: ChainContext, event: Event)
-  constructor(ctx: EventContext, event?: Event) {
-    event = event || ctx.event
-    assert(event.name === 'Currencies.MidTwoStarted')
-    this._chain = ctx._chain
-    this.event = event
-  }
-
-  get isV3(): boolean {
-    return this._chain.getEventHash('Currencies.MidTwoStarted') === '01f2f9c28aa1d4d36a81ff042620b6677d25bf07c2bf4acc37b58658778a4fca'
-  }
-
-  get asV3(): null {
-    assert(this.isV3)
-    return this._chain.decodeEvent(this.event)
-  }
-}
-
-export class CurrenciesMorningStartedEvent {
-  private readonly _chain: Chain
-  private readonly event: Event
-
-  constructor(ctx: EventContext)
-  constructor(ctx: ChainContext, event: Event)
-  constructor(ctx: EventContext, event?: Event) {
-    event = event || ctx.event
-    assert(event.name === 'Currencies.MorningStarted')
-    this._chain = ctx._chain
-    this.event = event
-  }
-
-  get isV3(): boolean {
-    return this._chain.getEventHash('Currencies.MorningStarted') === '01f2f9c28aa1d4d36a81ff042620b6677d25bf07c2bf4acc37b58658778a4fca'
-  }
-
-  get asV3(): null {
-    assert(this.isV3)
-    return this._chain.decodeEvent(this.event)
-  }
-}
-
-export class CurrenciesNightStartedEvent {
-  private readonly _chain: Chain
-  private readonly event: Event
-
-  constructor(ctx: EventContext)
-  constructor(ctx: ChainContext, event: Event)
-  constructor(ctx: EventContext, event?: Event) {
-    event = event || ctx.event
-    assert(event.name === 'Currencies.NightStarted')
-    this._chain = ctx._chain
-    this.event = event
-  }
-
-  get isV3(): boolean {
-    return this._chain.getEventHash('Currencies.NightStarted') === '01f2f9c28aa1d4d36a81ff042620b6677d25bf07c2bf4acc37b58658778a4fca'
-  }
-
-  get asV3(): null {
-    assert(this.isV3)
-    return this._chain.decodeEvent(this.event)
-  }
-}
-
-export class TokensBalanceSetEvent {
-  private readonly _chain: Chain
-  private readonly event: Event
-
-  constructor(ctx: EventContext)
-  constructor(ctx: ChainContext, event: Event)
-  constructor(ctx: EventContext, event?: Event) {
-    event = event || ctx.event
-    assert(event.name === 'Tokens.BalanceSet')
+    assert(event.name === 'Identity.IdentityCleared')
     this._chain = ctx._chain
     this.event = event
   }
 
   /**
-   * A balance was set by root.
+   * A name was cleared, and the given balance returned.
    */
   get isV3(): boolean {
-    return this._chain.getEventHash('Tokens.BalanceSet') === '33c10839efe6f5fac3a6f50d68cb8ddab2788457e5a5a18879dd596244aa3a4f'
+    return this._chain.getEventHash('Identity.IdentityCleared') === '569627bf2a8105e3949fd62dcaae8174fb02f8afedb8e5d8a7fecda5d63b25c3'
   }
 
   /**
-   * A balance was set by root.
+   * A name was cleared, and the given balance returned.
    */
-  get asV3(): {currencyId: v3.Coooooins, who: Uint8Array, free: bigint, reserved: bigint} {
+  get asV3(): {who: Uint8Array, deposit: bigint} {
     assert(this.isV3)
     return this._chain.decodeEvent(this.event)
   }
 }
 
-export class TokensDustLostEvent {
+export class IdentityIdentityKilledEvent {
   private readonly _chain: Chain
   private readonly event: Event
 
@@ -154,24 +91,80 @@ export class TokensDustLostEvent {
   constructor(ctx: ChainContext, event: Event)
   constructor(ctx: EventContext, event?: Event) {
     event = event || ctx.event
-    assert(event.name === 'Tokens.DustLost')
+    assert(event.name === 'Identity.IdentityKilled')
     this._chain = ctx._chain
     this.event = event
   }
 
   /**
-   * An account was removed whose balance was non-zero but below
-   * ExistentialDeposit, resulting in an outright loss.
+   * A name was removed and the given balance slashed.
    */
   get isV3(): boolean {
-    return this._chain.getEventHash('Tokens.DustLost') === '6d73954b70df5e2d9fc2fb289a36e630a911c60824edcb31758207a42e42c6fe'
+    return this._chain.getEventHash('Identity.IdentityKilled') === '569627bf2a8105e3949fd62dcaae8174fb02f8afedb8e5d8a7fecda5d63b25c3'
   }
 
   /**
-   * An account was removed whose balance was non-zero but below
-   * ExistentialDeposit, resulting in an outright loss.
+   * A name was removed and the given balance slashed.
    */
-  get asV3(): {currencyId: v3.Coooooins, who: Uint8Array, amount: bigint} {
+  get asV3(): {who: Uint8Array, deposit: bigint} {
+    assert(this.isV3)
+    return this._chain.decodeEvent(this.event)
+  }
+}
+
+export class IdentityIdentitySetEvent {
+  private readonly _chain: Chain
+  private readonly event: Event
+
+  constructor(ctx: EventContext)
+  constructor(ctx: ChainContext, event: Event)
+  constructor(ctx: EventContext, event?: Event) {
+    event = event || ctx.event
+    assert(event.name === 'Identity.IdentitySet')
+    this._chain = ctx._chain
+    this.event = event
+  }
+
+  /**
+   * A name was set or reset (which will remove all judgements).
+   */
+  get isV3(): boolean {
+    return this._chain.getEventHash('Identity.IdentitySet') === 'b8a0d2208835f6ada60dd21cd93533d703777b3779109a7c6a2f26bad68c2f3b'
+  }
+
+  /**
+   * A name was set or reset (which will remove all judgements).
+   */
+  get asV3(): {who: Uint8Array} {
+    assert(this.isV3)
+    return this._chain.decodeEvent(this.event)
+  }
+}
+
+export class IdentityJudgementGivenEvent {
+  private readonly _chain: Chain
+  private readonly event: Event
+
+  constructor(ctx: EventContext)
+  constructor(ctx: ChainContext, event: Event)
+  constructor(ctx: EventContext, event?: Event) {
+    event = event || ctx.event
+    assert(event.name === 'Identity.JudgementGiven')
+    this._chain = ctx._chain
+    this.event = event
+  }
+
+  /**
+   * A judgement was given by a registrar.
+   */
+  get isV3(): boolean {
+    return this._chain.getEventHash('Identity.JudgementGiven') === '0771fa05d0977d28db0dee420efa5c006fa01a48edbd0b5b50cba5ea1d98b1b8'
+  }
+
+  /**
+   * A judgement was given by a registrar.
+   */
+  get asV3(): {target: Uint8Array, registrarIndex: number} {
     assert(this.isV3)
     return this._chain.decodeEvent(this.event)
   }
@@ -206,7 +199,7 @@ export class TokensEndowedEvent {
   }
 }
 
-export class TokensReserveRepatriatedEvent {
+export class TokensTransferEvent {
   private readonly _chain: Chain
   private readonly event: Event
 
@@ -214,140 +207,22 @@ export class TokensReserveRepatriatedEvent {
   constructor(ctx: ChainContext, event: Event)
   constructor(ctx: EventContext, event?: Event) {
     event = event || ctx.event
-    assert(event.name === 'Tokens.ReserveRepatriated')
+    assert(event.name === 'Tokens.Transfer')
     this._chain = ctx._chain
     this.event = event
   }
 
   /**
-   * Some reserved balance was repatriated (moved from reserved to
-   * another account).
+   * Transfer succeeded.
    */
   get isV3(): boolean {
-    return this._chain.getEventHash('Tokens.ReserveRepatriated') === '08bf10315e986e14f278fc2b6a00b7b6eeeedf4692ccbf0b7c29a9d524d0fb07'
+    return this._chain.getEventHash('Tokens.Transfer') === '5147c1f931cd815f1c15f0110bbf110e0445ce1c0bbd5617444550af2be6d431'
   }
 
   /**
-   * Some reserved balance was repatriated (moved from reserved to
-   * another account).
+   * Transfer succeeded.
    */
-  get asV3(): {currencyId: v3.Coooooins, from: Uint8Array, to: Uint8Array, amount: bigint, status: v3.BalanceStatus} {
-    assert(this.isV3)
-    return this._chain.decodeEvent(this.event)
-  }
-}
-
-export class TokensReservedEvent {
-  private readonly _chain: Chain
-  private readonly event: Event
-
-  constructor(ctx: EventContext)
-  constructor(ctx: ChainContext, event: Event)
-  constructor(ctx: EventContext, event?: Event) {
-    event = event || ctx.event
-    assert(event.name === 'Tokens.Reserved')
-    this._chain = ctx._chain
-    this.event = event
-  }
-
-  /**
-   * Some balance was reserved (moved from free to reserved).
-   */
-  get isV3(): boolean {
-    return this._chain.getEventHash('Tokens.Reserved') === '6d73954b70df5e2d9fc2fb289a36e630a911c60824edcb31758207a42e42c6fe'
-  }
-
-  /**
-   * Some balance was reserved (moved from free to reserved).
-   */
-  get asV3(): {currencyId: v3.Coooooins, who: Uint8Array, amount: bigint} {
-    assert(this.isV3)
-    return this._chain.decodeEvent(this.event)
-  }
-}
-
-export class TokensTotalIssuanceSetEvent {
-  private readonly _chain: Chain
-  private readonly event: Event
-
-  constructor(ctx: EventContext)
-  constructor(ctx: ChainContext, event: Event)
-  constructor(ctx: EventContext, event?: Event) {
-    event = event || ctx.event
-    assert(event.name === 'Tokens.TotalIssuanceSet')
-    this._chain = ctx._chain
-    this.event = event
-  }
-
-  /**
-   * The total issuance of an currency has been set
-   */
-  get isV3(): boolean {
-    return this._chain.getEventHash('Tokens.TotalIssuanceSet') === '189c73d08533803a577cf63bcbf7ec9520fa28fce05c4fa58a84dc36bc3a847d'
-  }
-
-  /**
-   * The total issuance of an currency has been set
-   */
-  get asV3(): {currencyId: v3.Coooooins, amount: bigint} {
-    assert(this.isV3)
-    return this._chain.decodeEvent(this.event)
-  }
-}
-
-export class TokensUnreservedEvent {
-  private readonly _chain: Chain
-  private readonly event: Event
-
-  constructor(ctx: EventContext)
-  constructor(ctx: ChainContext, event: Event)
-  constructor(ctx: EventContext, event?: Event) {
-    event = event || ctx.event
-    assert(event.name === 'Tokens.Unreserved')
-    this._chain = ctx._chain
-    this.event = event
-  }
-
-  /**
-   * Some balance was unreserved (moved from reserved to free).
-   */
-  get isV3(): boolean {
-    return this._chain.getEventHash('Tokens.Unreserved') === '6d73954b70df5e2d9fc2fb289a36e630a911c60824edcb31758207a42e42c6fe'
-  }
-
-  /**
-   * Some balance was unreserved (moved from reserved to free).
-   */
-  get asV3(): {currencyId: v3.Coooooins, who: Uint8Array, amount: bigint} {
-    assert(this.isV3)
-    return this._chain.decodeEvent(this.event)
-  }
-}
-
-export class TokensWithdrawnEvent {
-  private readonly _chain: Chain
-  private readonly event: Event
-
-  constructor(ctx: EventContext)
-  constructor(ctx: ChainContext, event: Event)
-  constructor(ctx: EventContext, event?: Event) {
-    event = event || ctx.event
-    assert(event.name === 'Tokens.Withdrawn')
-    this._chain = ctx._chain
-    this.event = event
-  }
-
-  /**
-   * Some balances were withdrawn (e.g. pay for transaction fee)
-   */
-  get isV3(): boolean {
-    return this._chain.getEventHash('Tokens.Withdrawn') === '6d73954b70df5e2d9fc2fb289a36e630a911c60824edcb31758207a42e42c6fe'
-  }
-
-  /**
-   * Some balances were withdrawn (e.g. pay for transaction fee)
-   */
-  get asV3(): {currencyId: v3.Coooooins, who: Uint8Array, amount: bigint} {
+  get asV3(): {currencyId: v3.Coooooins, from: Uint8Array, to: Uint8Array, amount: bigint} {
     assert(this.isV3)
     return this._chain.decodeEvent(this.event)
   }

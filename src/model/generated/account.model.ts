@@ -1,5 +1,6 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToMany as OneToMany_} from "typeorm"
 import {Transfer} from "./transfer.model"
+import {FrenBurned} from "./frenBurned.model"
 
 @Entity_()
 export class Account {
@@ -18,4 +19,7 @@ export class Account {
 
   @OneToMany_(() => Transfer, e => e.from)
   transfersFrom!: Transfer[]
+
+  @OneToMany_(() => FrenBurned, e => e.account)
+  frenBurnedEvents!: FrenBurned[]
 }

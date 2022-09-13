@@ -14,16 +14,6 @@ export interface Coooooins_GN {
   __kind: 'GN'
 }
 
-export type BalanceStatus = BalanceStatus_Free | BalanceStatus_Reserved
-
-export interface BalanceStatus_Free {
-  __kind: 'Free'
-}
-
-export interface BalanceStatus_Reserved {
-  __kind: 'Reserved'
-}
-
 export interface Header {
   parentHash: Uint8Array
   number: number
@@ -4886,6 +4876,16 @@ export interface DispatchError_Arithmetic {
 export interface DispatchError_Transactional {
   __kind: 'Transactional'
   value: TransactionalError
+}
+
+export type BalanceStatus = BalanceStatus_Free | BalanceStatus_Reserved
+
+export interface BalanceStatus_Free {
+  __kind: 'Free'
+}
+
+export interface BalanceStatus_Reserved {
+  __kind: 'Reserved'
 }
 
 export type V2Outcome = V2Outcome_Complete | V2Outcome_Incomplete | V2Outcome_Error

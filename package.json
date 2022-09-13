@@ -8,6 +8,7 @@
     "build": "rm -rf lib && tsc",
     "db:migrate": "npx squid-typeorm-migration apply",
     "db:reset": ". ./scripts/reset-db.sh",
+    "db:soft-reset": ". ./scripts/soft-reset-db.sh",
     "processor:start": "node lib/processor.js",
     "query-node:start": "squid-graphql-server --subscriptions",
     "watch": "yarn chokidar \"src/**/*\" \"typegen\" -c 'yarn build'"
