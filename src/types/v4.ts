@@ -1,5 +1,120 @@
 import type {Result} from './support'
 
+export interface VestingSchedule {
+  start: number
+  period: number
+  periodCount: number
+  perPeriod: bigint
+}
+
+export type V2Error = V2Error_Overflow | V2Error_Unimplemented | V2Error_UntrustedReserveLocation | V2Error_UntrustedTeleportLocation | V2Error_MultiLocationFull | V2Error_MultiLocationNotInvertible | V2Error_BadOrigin | V2Error_InvalidLocation | V2Error_AssetNotFound | V2Error_FailedToTransactAsset | V2Error_NotWithdrawable | V2Error_LocationCannotHold | V2Error_ExceedsMaxMessageSize | V2Error_DestinationUnsupported | V2Error_Transport | V2Error_Unroutable | V2Error_UnknownClaim | V2Error_FailedToDecode | V2Error_MaxWeightInvalid | V2Error_NotHoldingFees | V2Error_TooExpensive | V2Error_Trap | V2Error_UnhandledXcmVersion | V2Error_WeightLimitReached | V2Error_Barrier | V2Error_WeightNotComputable
+
+export interface V2Error_Overflow {
+  __kind: 'Overflow'
+}
+
+export interface V2Error_Unimplemented {
+  __kind: 'Unimplemented'
+}
+
+export interface V2Error_UntrustedReserveLocation {
+  __kind: 'UntrustedReserveLocation'
+}
+
+export interface V2Error_UntrustedTeleportLocation {
+  __kind: 'UntrustedTeleportLocation'
+}
+
+export interface V2Error_MultiLocationFull {
+  __kind: 'MultiLocationFull'
+}
+
+export interface V2Error_MultiLocationNotInvertible {
+  __kind: 'MultiLocationNotInvertible'
+}
+
+export interface V2Error_BadOrigin {
+  __kind: 'BadOrigin'
+}
+
+export interface V2Error_InvalidLocation {
+  __kind: 'InvalidLocation'
+}
+
+export interface V2Error_AssetNotFound {
+  __kind: 'AssetNotFound'
+}
+
+export interface V2Error_FailedToTransactAsset {
+  __kind: 'FailedToTransactAsset'
+}
+
+export interface V2Error_NotWithdrawable {
+  __kind: 'NotWithdrawable'
+}
+
+export interface V2Error_LocationCannotHold {
+  __kind: 'LocationCannotHold'
+}
+
+export interface V2Error_ExceedsMaxMessageSize {
+  __kind: 'ExceedsMaxMessageSize'
+}
+
+export interface V2Error_DestinationUnsupported {
+  __kind: 'DestinationUnsupported'
+}
+
+export interface V2Error_Transport {
+  __kind: 'Transport'
+}
+
+export interface V2Error_Unroutable {
+  __kind: 'Unroutable'
+}
+
+export interface V2Error_UnknownClaim {
+  __kind: 'UnknownClaim'
+}
+
+export interface V2Error_FailedToDecode {
+  __kind: 'FailedToDecode'
+}
+
+export interface V2Error_MaxWeightInvalid {
+  __kind: 'MaxWeightInvalid'
+}
+
+export interface V2Error_NotHoldingFees {
+  __kind: 'NotHoldingFees'
+}
+
+export interface V2Error_TooExpensive {
+  __kind: 'TooExpensive'
+}
+
+export interface V2Error_Trap {
+  __kind: 'Trap'
+  value: bigint
+}
+
+export interface V2Error_UnhandledXcmVersion {
+  __kind: 'UnhandledXcmVersion'
+}
+
+export interface V2Error_WeightLimitReached {
+  __kind: 'WeightLimitReached'
+  value: bigint
+}
+
+export interface V2Error_Barrier {
+  __kind: 'Barrier'
+}
+
+export interface V2Error_WeightNotComputable {
+  __kind: 'WeightNotComputable'
+}
+
 export type MultiAddress = MultiAddress_Id | MultiAddress_Index | MultiAddress_Raw | MultiAddress_Address32 | MultiAddress_Address20
 
 export interface MultiAddress_Id {
@@ -25,13 +140,6 @@ export interface MultiAddress_Address32 {
 export interface MultiAddress_Address20 {
   __kind: 'Address20'
   value: Uint8Array
-}
-
-export interface VestingSchedule {
-  start: number
-  period: number
-  periodCount: number
-  perPeriod: bigint
 }
 
 export type Call = Call_System | Call_ParachainSystem | Call_Timestamp | Call_Sudo | Call_Treasury | Call_Identity | Call_Utility | Call_Balances | Call_Currencies | Call_Authorship | Call_CollatorSelection | Call_Session | Call_XcmpQueue | Call_PolkadotXcm | Call_DmpQueue | Call_OrmlXcm | Call_CarrotOnAStick
@@ -4091,114 +4199,6 @@ export interface BalanceStatus_Free {
 
 export interface BalanceStatus_Reserved {
   __kind: 'Reserved'
-}
-
-export type V2Error = V2Error_Overflow | V2Error_Unimplemented | V2Error_UntrustedReserveLocation | V2Error_UntrustedTeleportLocation | V2Error_MultiLocationFull | V2Error_MultiLocationNotInvertible | V2Error_BadOrigin | V2Error_InvalidLocation | V2Error_AssetNotFound | V2Error_FailedToTransactAsset | V2Error_NotWithdrawable | V2Error_LocationCannotHold | V2Error_ExceedsMaxMessageSize | V2Error_DestinationUnsupported | V2Error_Transport | V2Error_Unroutable | V2Error_UnknownClaim | V2Error_FailedToDecode | V2Error_MaxWeightInvalid | V2Error_NotHoldingFees | V2Error_TooExpensive | V2Error_Trap | V2Error_UnhandledXcmVersion | V2Error_WeightLimitReached | V2Error_Barrier | V2Error_WeightNotComputable
-
-export interface V2Error_Overflow {
-  __kind: 'Overflow'
-}
-
-export interface V2Error_Unimplemented {
-  __kind: 'Unimplemented'
-}
-
-export interface V2Error_UntrustedReserveLocation {
-  __kind: 'UntrustedReserveLocation'
-}
-
-export interface V2Error_UntrustedTeleportLocation {
-  __kind: 'UntrustedTeleportLocation'
-}
-
-export interface V2Error_MultiLocationFull {
-  __kind: 'MultiLocationFull'
-}
-
-export interface V2Error_MultiLocationNotInvertible {
-  __kind: 'MultiLocationNotInvertible'
-}
-
-export interface V2Error_BadOrigin {
-  __kind: 'BadOrigin'
-}
-
-export interface V2Error_InvalidLocation {
-  __kind: 'InvalidLocation'
-}
-
-export interface V2Error_AssetNotFound {
-  __kind: 'AssetNotFound'
-}
-
-export interface V2Error_FailedToTransactAsset {
-  __kind: 'FailedToTransactAsset'
-}
-
-export interface V2Error_NotWithdrawable {
-  __kind: 'NotWithdrawable'
-}
-
-export interface V2Error_LocationCannotHold {
-  __kind: 'LocationCannotHold'
-}
-
-export interface V2Error_ExceedsMaxMessageSize {
-  __kind: 'ExceedsMaxMessageSize'
-}
-
-export interface V2Error_DestinationUnsupported {
-  __kind: 'DestinationUnsupported'
-}
-
-export interface V2Error_Transport {
-  __kind: 'Transport'
-}
-
-export interface V2Error_Unroutable {
-  __kind: 'Unroutable'
-}
-
-export interface V2Error_UnknownClaim {
-  __kind: 'UnknownClaim'
-}
-
-export interface V2Error_FailedToDecode {
-  __kind: 'FailedToDecode'
-}
-
-export interface V2Error_MaxWeightInvalid {
-  __kind: 'MaxWeightInvalid'
-}
-
-export interface V2Error_NotHoldingFees {
-  __kind: 'NotHoldingFees'
-}
-
-export interface V2Error_TooExpensive {
-  __kind: 'TooExpensive'
-}
-
-export interface V2Error_Trap {
-  __kind: 'Trap'
-  value: bigint
-}
-
-export interface V2Error_UnhandledXcmVersion {
-  __kind: 'UnhandledXcmVersion'
-}
-
-export interface V2Error_WeightLimitReached {
-  __kind: 'WeightLimitReached'
-  value: bigint
-}
-
-export interface V2Error_Barrier {
-  __kind: 'Barrier'
-}
-
-export interface V2Error_WeightNotComputable {
-  __kind: 'WeightNotComputable'
 }
 
 export type V2Outcome = V2Outcome_Complete | V2Outcome_Incomplete | V2Outcome_Error

@@ -16,26 +16,40 @@ type Account @entity {
   transfersFrom: [Transfer!] @derivedFrom(field: "from")
   frenBurnedEvents: [FrenBurned!] @derivedFrom(field: "account")
 
+  burnedForGM: BigInt! @index
+  burnedForGN: BigInt! @index
+  burnedForGMGN: BigInt! @index
+  burnedForNothing: BigInt! @index
+  burnedTotal: BigInt! @index
+  balanceGMGN: BigInt! @index
+
+  #  balances: [AccountBalance!] @derivedFrom(field: "account")
+
+  display: String
+  discord: String
+  twitter: String
+  verified: Boolean
+
   sentGM: BigInt! @index
   sentGN: BigInt! @index
   sentGMGN: BigInt! @index
   receivedGM: BigInt! @index
   receivedGN: BigInt! @index
   receivedGMGN: BigInt! @index
-  burnedForGM: BigInt! @index
-  burnedForGN: BigInt! @index
-  burnedForGMGN: BigInt! @index
-  burnedForNothing: BigInt! @index
-  burnedTotal: BigInt! @index
-  balanceGM: BigInt! @index
-  balanceGN: BigInt! @index
-  balanceGMGN: BigInt! @index
-  balanceFREN: BigInt! @index
 
-  display: String
-  discord: String
-  twitter: String
-  verified: Boolean
+  balanceGM: BigInt! @index
+  balanceFrozenGM: BigInt! @index
+  balanceReservedGM: BigInt! @index
+
+  balanceGN: BigInt! @index
+  balanceFrozenGN: BigInt! @index
+  balanceReservedGN: BigInt! @index
+
+  balanceFREN: BigInt! @index
+  balanceFreeFREN: BigInt! @index
+  balanceReservedFREN: BigInt! @index
+  balanceMiscFrozenFREN: BigInt! @index
+  balanceFeeFrozenFREN: BigInt! @index
 }
 
 type Transfer @entity {
@@ -59,3 +73,13 @@ type FrenBurned @entity {
   burnedAmount: BigInt! @index
   burnedFor: BurnedReward
 }
+
+#type AccountBalance @entity {
+#  "Currency name FREN | GM | GN"
+#  id: ID!
+#  account: Account!
+#  free: BigInt! @index
+#  reserved: BigInt! @index
+#  frozen: BigInt! @index
+#  total: BigInt! @index
+#}

@@ -1,5 +1,4 @@
 import { Coooooins } from '../types/v3';
-import { Account } from '../model';
 
 type InferCoinName<T> = T extends { __kind: infer A } ? A : never;
 export type CoinName = InferCoinName<Pick<Coooooins, '__kind'>>;
@@ -7,6 +6,7 @@ export type CoinName = InferCoinName<Pick<Coooooins, '__kind'>>;
 export type BurnedReward = Exclude<CoinName, 'FREN'> | null;
 
 export enum BlockEventName {
+  IDENTITY = 'IDENTITY',
   TRANSFER = 'TRANSFER',
   FREN_BURNED = 'FREN_BURNED'
 }
@@ -31,3 +31,7 @@ export interface FrenBurnedEventData {
   burnedAmount: bigint;
   burnedFor: BurnedReward;
 }
+
+export type ParsedEventsData = TransferEventData | FrenBurnedEventData | string;
+
+export type ParsedEventsDataMap = Map<BlockEventName, Set<ParsedEventsData>>;

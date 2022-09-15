@@ -1,5 +1,32 @@
 import type {Result} from './support'
 
+export type BalanceStatus = BalanceStatus_Free | BalanceStatus_Reserved
+
+export interface BalanceStatus_Free {
+  __kind: 'Free'
+}
+
+export interface BalanceStatus_Reserved {
+  __kind: 'Reserved'
+}
+
+export type V2Outcome = V2Outcome_Complete | V2Outcome_Incomplete | V2Outcome_Error
+
+export interface V2Outcome_Complete {
+  __kind: 'Complete'
+  value: bigint
+}
+
+export interface V2Outcome_Incomplete {
+  __kind: 'Incomplete'
+  value: [bigint, V2Error]
+}
+
+export interface V2Outcome_Error {
+  __kind: 'Error'
+  value: V2Error
+}
+
 export type Coooooins = Coooooins_FREN | Coooooins_GM | Coooooins_GN
 
 export interface Coooooins_FREN {
@@ -12,6 +39,383 @@ export interface Coooooins_GM {
 
 export interface Coooooins_GN {
   __kind: 'GN'
+}
+
+export interface V1MultiLocation {
+  parents: number
+  interior: V1Junctions
+}
+
+export type V2Instruction = V2Instruction_WithdrawAsset | V2Instruction_ReserveAssetDeposited | V2Instruction_ReceiveTeleportedAsset | V2Instruction_QueryResponse | V2Instruction_TransferAsset | V2Instruction_TransferReserveAsset | V2Instruction_Transact | V2Instruction_HrmpNewChannelOpenRequest | V2Instruction_HrmpChannelAccepted | V2Instruction_HrmpChannelClosing | V2Instruction_ClearOrigin | V2Instruction_DescendOrigin | V2Instruction_ReportError | V2Instruction_DepositAsset | V2Instruction_DepositReserveAsset | V2Instruction_ExchangeAsset | V2Instruction_InitiateReserveWithdraw | V2Instruction_InitiateTeleport | V2Instruction_QueryHolding | V2Instruction_BuyExecution | V2Instruction_RefundSurplus | V2Instruction_SetErrorHandler | V2Instruction_SetAppendix | V2Instruction_ClearError | V2Instruction_ClaimAsset | V2Instruction_Trap | V2Instruction_SubscribeVersion | V2Instruction_UnsubscribeVersion
+
+export interface V2Instruction_WithdrawAsset {
+  __kind: 'WithdrawAsset'
+  value: V1MultiAsset[]
+}
+
+export interface V2Instruction_ReserveAssetDeposited {
+  __kind: 'ReserveAssetDeposited'
+  value: V1MultiAsset[]
+}
+
+export interface V2Instruction_ReceiveTeleportedAsset {
+  __kind: 'ReceiveTeleportedAsset'
+  value: V1MultiAsset[]
+}
+
+export interface V2Instruction_QueryResponse {
+  __kind: 'QueryResponse'
+  queryId: bigint
+  response: V2Response
+  maxWeight: bigint
+}
+
+export interface V2Instruction_TransferAsset {
+  __kind: 'TransferAsset'
+  assets: V1MultiAsset[]
+  beneficiary: V1MultiLocation
+}
+
+export interface V2Instruction_TransferReserveAsset {
+  __kind: 'TransferReserveAsset'
+  assets: V1MultiAsset[]
+  dest: V1MultiLocation
+  xcm: V2Instruction[]
+}
+
+export interface V2Instruction_Transact {
+  __kind: 'Transact'
+  originType: V0OriginKind
+  requireWeightAtMost: bigint
+  call: DoubleEncoded
+}
+
+export interface V2Instruction_HrmpNewChannelOpenRequest {
+  __kind: 'HrmpNewChannelOpenRequest'
+  sender: number
+  maxMessageSize: number
+  maxCapacity: number
+}
+
+export interface V2Instruction_HrmpChannelAccepted {
+  __kind: 'HrmpChannelAccepted'
+  recipient: number
+}
+
+export interface V2Instruction_HrmpChannelClosing {
+  __kind: 'HrmpChannelClosing'
+  initiator: number
+  sender: number
+  recipient: number
+}
+
+export interface V2Instruction_ClearOrigin {
+  __kind: 'ClearOrigin'
+}
+
+export interface V2Instruction_DescendOrigin {
+  __kind: 'DescendOrigin'
+  value: V1Junctions
+}
+
+export interface V2Instruction_ReportError {
+  __kind: 'ReportError'
+  queryId: bigint
+  dest: V1MultiLocation
+  maxResponseWeight: bigint
+}
+
+export interface V2Instruction_DepositAsset {
+  __kind: 'DepositAsset'
+  assets: V1MultiAssetFilter
+  maxAssets: number
+  beneficiary: V1MultiLocation
+}
+
+export interface V2Instruction_DepositReserveAsset {
+  __kind: 'DepositReserveAsset'
+  assets: V1MultiAssetFilter
+  maxAssets: number
+  dest: V1MultiLocation
+  xcm: V2Instruction[]
+}
+
+export interface V2Instruction_ExchangeAsset {
+  __kind: 'ExchangeAsset'
+  give: V1MultiAssetFilter
+  receive: V1MultiAsset[]
+}
+
+export interface V2Instruction_InitiateReserveWithdraw {
+  __kind: 'InitiateReserveWithdraw'
+  assets: V1MultiAssetFilter
+  reserve: V1MultiLocation
+  xcm: V2Instruction[]
+}
+
+export interface V2Instruction_InitiateTeleport {
+  __kind: 'InitiateTeleport'
+  assets: V1MultiAssetFilter
+  dest: V1MultiLocation
+  xcm: V2Instruction[]
+}
+
+export interface V2Instruction_QueryHolding {
+  __kind: 'QueryHolding'
+  queryId: bigint
+  dest: V1MultiLocation
+  assets: V1MultiAssetFilter
+  maxResponseWeight: bigint
+}
+
+export interface V2Instruction_BuyExecution {
+  __kind: 'BuyExecution'
+  fees: V1MultiAsset
+  weightLimit: V2WeightLimit
+}
+
+export interface V2Instruction_RefundSurplus {
+  __kind: 'RefundSurplus'
+}
+
+export interface V2Instruction_SetErrorHandler {
+  __kind: 'SetErrorHandler'
+  value: V2Instruction[]
+}
+
+export interface V2Instruction_SetAppendix {
+  __kind: 'SetAppendix'
+  value: V2Instruction[]
+}
+
+export interface V2Instruction_ClearError {
+  __kind: 'ClearError'
+}
+
+export interface V2Instruction_ClaimAsset {
+  __kind: 'ClaimAsset'
+  assets: V1MultiAsset[]
+  ticket: V1MultiLocation
+}
+
+export interface V2Instruction_Trap {
+  __kind: 'Trap'
+  value: bigint
+}
+
+export interface V2Instruction_SubscribeVersion {
+  __kind: 'SubscribeVersion'
+  queryId: bigint
+  maxResponseWeight: bigint
+}
+
+export interface V2Instruction_UnsubscribeVersion {
+  __kind: 'UnsubscribeVersion'
+}
+
+export type VersionedMultiAssets = VersionedMultiAssets_V0 | VersionedMultiAssets_V1
+
+export interface VersionedMultiAssets_V0 {
+  __kind: 'V0'
+  value: V0MultiAsset[]
+}
+
+export interface VersionedMultiAssets_V1 {
+  __kind: 'V1'
+  value: V1MultiAsset[]
+}
+
+export type VersionedMultiLocation = VersionedMultiLocation_V0 | VersionedMultiLocation_V1
+
+export interface VersionedMultiLocation_V0 {
+  __kind: 'V0'
+  value: V0MultiLocation
+}
+
+export interface VersionedMultiLocation_V1 {
+  __kind: 'V1'
+  value: V1MultiLocation
+}
+
+export type V2Error = V2Error_Overflow | V2Error_Unimplemented | V2Error_UntrustedReserveLocation | V2Error_UntrustedTeleportLocation | V2Error_MultiLocationFull | V2Error_MultiLocationNotInvertible | V2Error_BadOrigin | V2Error_InvalidLocation | V2Error_AssetNotFound | V2Error_FailedToTransactAsset | V2Error_NotWithdrawable | V2Error_LocationCannotHold | V2Error_ExceedsMaxMessageSize | V2Error_DestinationUnsupported | V2Error_Transport | V2Error_Unroutable | V2Error_UnknownClaim | V2Error_FailedToDecode | V2Error_MaxWeightInvalid | V2Error_NotHoldingFees | V2Error_TooExpensive | V2Error_Trap | V2Error_UnhandledXcmVersion | V2Error_WeightLimitReached | V2Error_Barrier | V2Error_WeightNotComputable
+
+export interface V2Error_Overflow {
+  __kind: 'Overflow'
+}
+
+export interface V2Error_Unimplemented {
+  __kind: 'Unimplemented'
+}
+
+export interface V2Error_UntrustedReserveLocation {
+  __kind: 'UntrustedReserveLocation'
+}
+
+export interface V2Error_UntrustedTeleportLocation {
+  __kind: 'UntrustedTeleportLocation'
+}
+
+export interface V2Error_MultiLocationFull {
+  __kind: 'MultiLocationFull'
+}
+
+export interface V2Error_MultiLocationNotInvertible {
+  __kind: 'MultiLocationNotInvertible'
+}
+
+export interface V2Error_BadOrigin {
+  __kind: 'BadOrigin'
+}
+
+export interface V2Error_InvalidLocation {
+  __kind: 'InvalidLocation'
+}
+
+export interface V2Error_AssetNotFound {
+  __kind: 'AssetNotFound'
+}
+
+export interface V2Error_FailedToTransactAsset {
+  __kind: 'FailedToTransactAsset'
+}
+
+export interface V2Error_NotWithdrawable {
+  __kind: 'NotWithdrawable'
+}
+
+export interface V2Error_LocationCannotHold {
+  __kind: 'LocationCannotHold'
+}
+
+export interface V2Error_ExceedsMaxMessageSize {
+  __kind: 'ExceedsMaxMessageSize'
+}
+
+export interface V2Error_DestinationUnsupported {
+  __kind: 'DestinationUnsupported'
+}
+
+export interface V2Error_Transport {
+  __kind: 'Transport'
+}
+
+export interface V2Error_Unroutable {
+  __kind: 'Unroutable'
+}
+
+export interface V2Error_UnknownClaim {
+  __kind: 'UnknownClaim'
+}
+
+export interface V2Error_FailedToDecode {
+  __kind: 'FailedToDecode'
+}
+
+export interface V2Error_MaxWeightInvalid {
+  __kind: 'MaxWeightInvalid'
+}
+
+export interface V2Error_NotHoldingFees {
+  __kind: 'NotHoldingFees'
+}
+
+export interface V2Error_TooExpensive {
+  __kind: 'TooExpensive'
+}
+
+export interface V2Error_Trap {
+  __kind: 'Trap'
+  value: bigint
+}
+
+export interface V2Error_UnhandledXcmVersion {
+  __kind: 'UnhandledXcmVersion'
+}
+
+export interface V2Error_WeightLimitReached {
+  __kind: 'WeightLimitReached'
+  value: bigint
+}
+
+export interface V2Error_Barrier {
+  __kind: 'Barrier'
+}
+
+export interface V2Error_WeightNotComputable {
+  __kind: 'WeightNotComputable'
+}
+
+export type V2Response = V2Response_Null | V2Response_Assets | V2Response_ExecutionResult | V2Response_Version
+
+export interface V2Response_Null {
+  __kind: 'Null'
+}
+
+export interface V2Response_Assets {
+  __kind: 'Assets'
+  value: V1MultiAsset[]
+}
+
+export interface V2Response_ExecutionResult {
+  __kind: 'ExecutionResult'
+  value: ([number, V2Error] | undefined)
+}
+
+export interface V2Response_Version {
+  __kind: 'Version'
+  value: number
+}
+
+export type DispatchError = DispatchError_Other | DispatchError_CannotLookup | DispatchError_BadOrigin | DispatchError_Module | DispatchError_ConsumerRemaining | DispatchError_NoProviders | DispatchError_TooManyConsumers | DispatchError_Token | DispatchError_Arithmetic | DispatchError_Transactional
+
+export interface DispatchError_Other {
+  __kind: 'Other'
+}
+
+export interface DispatchError_CannotLookup {
+  __kind: 'CannotLookup'
+}
+
+export interface DispatchError_BadOrigin {
+  __kind: 'BadOrigin'
+}
+
+export interface DispatchError_Module {
+  __kind: 'Module'
+  value: ModuleError
+}
+
+export interface DispatchError_ConsumerRemaining {
+  __kind: 'ConsumerRemaining'
+}
+
+export interface DispatchError_NoProviders {
+  __kind: 'NoProviders'
+}
+
+export interface DispatchError_TooManyConsumers {
+  __kind: 'TooManyConsumers'
+}
+
+export interface DispatchError_Token {
+  __kind: 'Token'
+  value: TokenError
+}
+
+export interface DispatchError_Arithmetic {
+  __kind: 'Arithmetic'
+  value: ArithmeticError
+}
+
+export interface DispatchError_Transactional {
+  __kind: 'Transactional'
+  value: TransactionalError
+}
+
+export interface DispatchInfo {
+  weight: bigint
+  class: DispatchClass
+  paysFee: Pays
 }
 
 export interface Header {
@@ -283,18 +687,6 @@ export interface IdentityInfo {
   twitter: Data
 }
 
-export type VersionedMultiLocation = VersionedMultiLocation_V0 | VersionedMultiLocation_V1
-
-export interface VersionedMultiLocation_V0 {
-  __kind: 'V0'
-  value: V0MultiLocation
-}
-
-export interface VersionedMultiLocation_V1 {
-  __kind: 'V1'
-  value: V1MultiLocation
-}
-
 export type VersionedXcm = VersionedXcm_V0 | VersionedXcm_V1 | VersionedXcm_V2
 
 export interface VersionedXcm_V0 {
@@ -334,23 +726,6 @@ export interface Type_220_V1 {
 export interface Type_220_V2 {
   __kind: 'V2'
   value: Type_232[]
-}
-
-export interface V1MultiLocation {
-  parents: number
-  interior: V1Junctions
-}
-
-export type VersionedMultiAssets = VersionedMultiAssets_V0 | VersionedMultiAssets_V1
-
-export interface VersionedMultiAssets_V0 {
-  __kind: 'V0'
-  value: V0MultiAsset[]
-}
-
-export interface VersionedMultiAssets_V1 {
-  __kind: 'V1'
-  value: V1MultiAsset[]
 }
 
 export type V2WeightLimit = V2WeightLimit_Unlimited | V2WeightLimit_Limited
@@ -693,6 +1068,153 @@ export interface QueueConfigData {
   xcmpMaxIndividualWeight: bigint
 }
 
+export type V1Junctions = V1Junctions_Here | V1Junctions_X1 | V1Junctions_X2 | V1Junctions_X3 | V1Junctions_X4 | V1Junctions_X5 | V1Junctions_X6 | V1Junctions_X7 | V1Junctions_X8
+
+export interface V1Junctions_Here {
+  __kind: 'Here'
+}
+
+export interface V1Junctions_X1 {
+  __kind: 'X1'
+  value: V1Junction
+}
+
+export interface V1Junctions_X2 {
+  __kind: 'X2'
+  value: [V1Junction, V1Junction]
+}
+
+export interface V1Junctions_X3 {
+  __kind: 'X3'
+  value: [V1Junction, V1Junction, V1Junction]
+}
+
+export interface V1Junctions_X4 {
+  __kind: 'X4'
+  value: [V1Junction, V1Junction, V1Junction, V1Junction]
+}
+
+export interface V1Junctions_X5 {
+  __kind: 'X5'
+  value: [V1Junction, V1Junction, V1Junction, V1Junction, V1Junction]
+}
+
+export interface V1Junctions_X6 {
+  __kind: 'X6'
+  value: [V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction]
+}
+
+export interface V1Junctions_X7 {
+  __kind: 'X7'
+  value: [V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction]
+}
+
+export interface V1Junctions_X8 {
+  __kind: 'X8'
+  value: [V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction]
+}
+
+export interface V1MultiAsset {
+  id: V1AssetId
+  fun: V1Fungibility
+}
+
+export type V0OriginKind = V0OriginKind_Native | V0OriginKind_SovereignAccount | V0OriginKind_Superuser | V0OriginKind_Xcm
+
+export interface V0OriginKind_Native {
+  __kind: 'Native'
+}
+
+export interface V0OriginKind_SovereignAccount {
+  __kind: 'SovereignAccount'
+}
+
+export interface V0OriginKind_Superuser {
+  __kind: 'Superuser'
+}
+
+export interface V0OriginKind_Xcm {
+  __kind: 'Xcm'
+}
+
+export interface DoubleEncoded {
+  encoded: Uint8Array
+}
+
+export type V1MultiAssetFilter = V1MultiAssetFilter_Definite | V1MultiAssetFilter_Wild
+
+export interface V1MultiAssetFilter_Definite {
+  __kind: 'Definite'
+  value: V1MultiAsset[]
+}
+
+export interface V1MultiAssetFilter_Wild {
+  __kind: 'Wild'
+  value: V1WildMultiAsset
+}
+
+export type V0MultiAsset = V0MultiAsset_None | V0MultiAsset_All | V0MultiAsset_AllFungible | V0MultiAsset_AllNonFungible | V0MultiAsset_AllAbstractFungible | V0MultiAsset_AllAbstractNonFungible | V0MultiAsset_AllConcreteFungible | V0MultiAsset_AllConcreteNonFungible | V0MultiAsset_AbstractFungible | V0MultiAsset_AbstractNonFungible | V0MultiAsset_ConcreteFungible | V0MultiAsset_ConcreteNonFungible
+
+export interface V0MultiAsset_None {
+  __kind: 'None'
+}
+
+export interface V0MultiAsset_All {
+  __kind: 'All'
+}
+
+export interface V0MultiAsset_AllFungible {
+  __kind: 'AllFungible'
+}
+
+export interface V0MultiAsset_AllNonFungible {
+  __kind: 'AllNonFungible'
+}
+
+export interface V0MultiAsset_AllAbstractFungible {
+  __kind: 'AllAbstractFungible'
+  id: Uint8Array
+}
+
+export interface V0MultiAsset_AllAbstractNonFungible {
+  __kind: 'AllAbstractNonFungible'
+  class: Uint8Array
+}
+
+export interface V0MultiAsset_AllConcreteFungible {
+  __kind: 'AllConcreteFungible'
+  id: V0MultiLocation
+}
+
+export interface V0MultiAsset_AllConcreteNonFungible {
+  __kind: 'AllConcreteNonFungible'
+  class: V0MultiLocation
+}
+
+export interface V0MultiAsset_AbstractFungible {
+  __kind: 'AbstractFungible'
+  id: Uint8Array
+  amount: bigint
+}
+
+export interface V0MultiAsset_AbstractNonFungible {
+  __kind: 'AbstractNonFungible'
+  class: Uint8Array
+  instance: V1AssetInstance
+}
+
+export interface V0MultiAsset_ConcreteFungible {
+  __kind: 'ConcreteFungible'
+  id: V0MultiLocation
+  amount: bigint
+}
+
+export interface V0MultiAsset_ConcreteNonFungible {
+  __kind: 'ConcreteNonFungible'
+  class: V0MultiLocation
+  instance: V1AssetInstance
+}
+
 export type V0MultiLocation = V0MultiLocation_Null | V0MultiLocation_X1 | V0MultiLocation_X2 | V0MultiLocation_X3 | V0MultiLocation_X4 | V0MultiLocation_X5 | V0MultiLocation_X6 | V0MultiLocation_X7 | V0MultiLocation_X8
 
 export interface V0MultiLocation_Null {
@@ -737,6 +1259,89 @@ export interface V0MultiLocation_X7 {
 export interface V0MultiLocation_X8 {
   __kind: 'X8'
   value: [V0Junction, V0Junction, V0Junction, V0Junction, V0Junction, V0Junction, V0Junction, V0Junction]
+}
+
+export interface ModuleError {
+  index: number
+  error: Uint8Array
+}
+
+export type TokenError = TokenError_NoFunds | TokenError_WouldDie | TokenError_BelowMinimum | TokenError_CannotCreate | TokenError_UnknownAsset | TokenError_Frozen | TokenError_Unsupported
+
+export interface TokenError_NoFunds {
+  __kind: 'NoFunds'
+}
+
+export interface TokenError_WouldDie {
+  __kind: 'WouldDie'
+}
+
+export interface TokenError_BelowMinimum {
+  __kind: 'BelowMinimum'
+}
+
+export interface TokenError_CannotCreate {
+  __kind: 'CannotCreate'
+}
+
+export interface TokenError_UnknownAsset {
+  __kind: 'UnknownAsset'
+}
+
+export interface TokenError_Frozen {
+  __kind: 'Frozen'
+}
+
+export interface TokenError_Unsupported {
+  __kind: 'Unsupported'
+}
+
+export type ArithmeticError = ArithmeticError_Underflow | ArithmeticError_Overflow | ArithmeticError_DivisionByZero
+
+export interface ArithmeticError_Underflow {
+  __kind: 'Underflow'
+}
+
+export interface ArithmeticError_Overflow {
+  __kind: 'Overflow'
+}
+
+export interface ArithmeticError_DivisionByZero {
+  __kind: 'DivisionByZero'
+}
+
+export type TransactionalError = TransactionalError_LimitReached | TransactionalError_NoLayer
+
+export interface TransactionalError_LimitReached {
+  __kind: 'LimitReached'
+}
+
+export interface TransactionalError_NoLayer {
+  __kind: 'NoLayer'
+}
+
+export type DispatchClass = DispatchClass_Normal | DispatchClass_Operational | DispatchClass_Mandatory
+
+export interface DispatchClass_Normal {
+  __kind: 'Normal'
+}
+
+export interface DispatchClass_Operational {
+  __kind: 'Operational'
+}
+
+export interface DispatchClass_Mandatory {
+  __kind: 'Mandatory'
+}
+
+export type Pays = Pays_Yes | Pays_No
+
+export interface Pays_Yes {
+  __kind: 'Yes'
+}
+
+export interface Pays_No {
+  __kind: 'No'
 }
 
 export type V0Xcm = V0Xcm_WithdrawAsset | V0Xcm_ReserveAssetDeposit | V0Xcm_TeleportAsset | V0Xcm_QueryResponse | V0Xcm_TransferAsset | V0Xcm_TransferReserveAsset | V0Xcm_Transact | V0Xcm_HrmpNewChannelOpenRequest | V0Xcm_HrmpChannelAccepted | V0Xcm_HrmpChannelClosing | V0Xcm_RelayedFrom
@@ -888,173 +1493,6 @@ export interface V1Xcm_SubscribeVersion {
 }
 
 export interface V1Xcm_UnsubscribeVersion {
-  __kind: 'UnsubscribeVersion'
-}
-
-export type V2Instruction = V2Instruction_WithdrawAsset | V2Instruction_ReserveAssetDeposited | V2Instruction_ReceiveTeleportedAsset | V2Instruction_QueryResponse | V2Instruction_TransferAsset | V2Instruction_TransferReserveAsset | V2Instruction_Transact | V2Instruction_HrmpNewChannelOpenRequest | V2Instruction_HrmpChannelAccepted | V2Instruction_HrmpChannelClosing | V2Instruction_ClearOrigin | V2Instruction_DescendOrigin | V2Instruction_ReportError | V2Instruction_DepositAsset | V2Instruction_DepositReserveAsset | V2Instruction_ExchangeAsset | V2Instruction_InitiateReserveWithdraw | V2Instruction_InitiateTeleport | V2Instruction_QueryHolding | V2Instruction_BuyExecution | V2Instruction_RefundSurplus | V2Instruction_SetErrorHandler | V2Instruction_SetAppendix | V2Instruction_ClearError | V2Instruction_ClaimAsset | V2Instruction_Trap | V2Instruction_SubscribeVersion | V2Instruction_UnsubscribeVersion
-
-export interface V2Instruction_WithdrawAsset {
-  __kind: 'WithdrawAsset'
-  value: V1MultiAsset[]
-}
-
-export interface V2Instruction_ReserveAssetDeposited {
-  __kind: 'ReserveAssetDeposited'
-  value: V1MultiAsset[]
-}
-
-export interface V2Instruction_ReceiveTeleportedAsset {
-  __kind: 'ReceiveTeleportedAsset'
-  value: V1MultiAsset[]
-}
-
-export interface V2Instruction_QueryResponse {
-  __kind: 'QueryResponse'
-  queryId: bigint
-  response: V2Response
-  maxWeight: bigint
-}
-
-export interface V2Instruction_TransferAsset {
-  __kind: 'TransferAsset'
-  assets: V1MultiAsset[]
-  beneficiary: V1MultiLocation
-}
-
-export interface V2Instruction_TransferReserveAsset {
-  __kind: 'TransferReserveAsset'
-  assets: V1MultiAsset[]
-  dest: V1MultiLocation
-  xcm: V2Instruction[]
-}
-
-export interface V2Instruction_Transact {
-  __kind: 'Transact'
-  originType: V0OriginKind
-  requireWeightAtMost: bigint
-  call: DoubleEncoded
-}
-
-export interface V2Instruction_HrmpNewChannelOpenRequest {
-  __kind: 'HrmpNewChannelOpenRequest'
-  sender: number
-  maxMessageSize: number
-  maxCapacity: number
-}
-
-export interface V2Instruction_HrmpChannelAccepted {
-  __kind: 'HrmpChannelAccepted'
-  recipient: number
-}
-
-export interface V2Instruction_HrmpChannelClosing {
-  __kind: 'HrmpChannelClosing'
-  initiator: number
-  sender: number
-  recipient: number
-}
-
-export interface V2Instruction_ClearOrigin {
-  __kind: 'ClearOrigin'
-}
-
-export interface V2Instruction_DescendOrigin {
-  __kind: 'DescendOrigin'
-  value: V1Junctions
-}
-
-export interface V2Instruction_ReportError {
-  __kind: 'ReportError'
-  queryId: bigint
-  dest: V1MultiLocation
-  maxResponseWeight: bigint
-}
-
-export interface V2Instruction_DepositAsset {
-  __kind: 'DepositAsset'
-  assets: V1MultiAssetFilter
-  maxAssets: number
-  beneficiary: V1MultiLocation
-}
-
-export interface V2Instruction_DepositReserveAsset {
-  __kind: 'DepositReserveAsset'
-  assets: V1MultiAssetFilter
-  maxAssets: number
-  dest: V1MultiLocation
-  xcm: V2Instruction[]
-}
-
-export interface V2Instruction_ExchangeAsset {
-  __kind: 'ExchangeAsset'
-  give: V1MultiAssetFilter
-  receive: V1MultiAsset[]
-}
-
-export interface V2Instruction_InitiateReserveWithdraw {
-  __kind: 'InitiateReserveWithdraw'
-  assets: V1MultiAssetFilter
-  reserve: V1MultiLocation
-  xcm: V2Instruction[]
-}
-
-export interface V2Instruction_InitiateTeleport {
-  __kind: 'InitiateTeleport'
-  assets: V1MultiAssetFilter
-  dest: V1MultiLocation
-  xcm: V2Instruction[]
-}
-
-export interface V2Instruction_QueryHolding {
-  __kind: 'QueryHolding'
-  queryId: bigint
-  dest: V1MultiLocation
-  assets: V1MultiAssetFilter
-  maxResponseWeight: bigint
-}
-
-export interface V2Instruction_BuyExecution {
-  __kind: 'BuyExecution'
-  fees: V1MultiAsset
-  weightLimit: V2WeightLimit
-}
-
-export interface V2Instruction_RefundSurplus {
-  __kind: 'RefundSurplus'
-}
-
-export interface V2Instruction_SetErrorHandler {
-  __kind: 'SetErrorHandler'
-  value: V2Instruction[]
-}
-
-export interface V2Instruction_SetAppendix {
-  __kind: 'SetAppendix'
-  value: V2Instruction[]
-}
-
-export interface V2Instruction_ClearError {
-  __kind: 'ClearError'
-}
-
-export interface V2Instruction_ClaimAsset {
-  __kind: 'ClaimAsset'
-  assets: V1MultiAsset[]
-  ticket: V1MultiLocation
-}
-
-export interface V2Instruction_Trap {
-  __kind: 'Trap'
-  value: bigint
-}
-
-export interface V2Instruction_SubscribeVersion {
-  __kind: 'SubscribeVersion'
-  queryId: bigint
-  maxResponseWeight: bigint
-}
-
-export interface V2Instruction_UnsubscribeVersion {
   __kind: 'UnsubscribeVersion'
 }
 
@@ -1385,119 +1823,6 @@ export interface Type_232_SubscribeVersion {
 
 export interface Type_232_UnsubscribeVersion {
   __kind: 'UnsubscribeVersion'
-}
-
-export type V1Junctions = V1Junctions_Here | V1Junctions_X1 | V1Junctions_X2 | V1Junctions_X3 | V1Junctions_X4 | V1Junctions_X5 | V1Junctions_X6 | V1Junctions_X7 | V1Junctions_X8
-
-export interface V1Junctions_Here {
-  __kind: 'Here'
-}
-
-export interface V1Junctions_X1 {
-  __kind: 'X1'
-  value: V1Junction
-}
-
-export interface V1Junctions_X2 {
-  __kind: 'X2'
-  value: [V1Junction, V1Junction]
-}
-
-export interface V1Junctions_X3 {
-  __kind: 'X3'
-  value: [V1Junction, V1Junction, V1Junction]
-}
-
-export interface V1Junctions_X4 {
-  __kind: 'X4'
-  value: [V1Junction, V1Junction, V1Junction, V1Junction]
-}
-
-export interface V1Junctions_X5 {
-  __kind: 'X5'
-  value: [V1Junction, V1Junction, V1Junction, V1Junction, V1Junction]
-}
-
-export interface V1Junctions_X6 {
-  __kind: 'X6'
-  value: [V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction]
-}
-
-export interface V1Junctions_X7 {
-  __kind: 'X7'
-  value: [V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction]
-}
-
-export interface V1Junctions_X8 {
-  __kind: 'X8'
-  value: [V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction, V1Junction]
-}
-
-export type V0MultiAsset = V0MultiAsset_None | V0MultiAsset_All | V0MultiAsset_AllFungible | V0MultiAsset_AllNonFungible | V0MultiAsset_AllAbstractFungible | V0MultiAsset_AllAbstractNonFungible | V0MultiAsset_AllConcreteFungible | V0MultiAsset_AllConcreteNonFungible | V0MultiAsset_AbstractFungible | V0MultiAsset_AbstractNonFungible | V0MultiAsset_ConcreteFungible | V0MultiAsset_ConcreteNonFungible
-
-export interface V0MultiAsset_None {
-  __kind: 'None'
-}
-
-export interface V0MultiAsset_All {
-  __kind: 'All'
-}
-
-export interface V0MultiAsset_AllFungible {
-  __kind: 'AllFungible'
-}
-
-export interface V0MultiAsset_AllNonFungible {
-  __kind: 'AllNonFungible'
-}
-
-export interface V0MultiAsset_AllAbstractFungible {
-  __kind: 'AllAbstractFungible'
-  id: Uint8Array
-}
-
-export interface V0MultiAsset_AllAbstractNonFungible {
-  __kind: 'AllAbstractNonFungible'
-  class: Uint8Array
-}
-
-export interface V0MultiAsset_AllConcreteFungible {
-  __kind: 'AllConcreteFungible'
-  id: V0MultiLocation
-}
-
-export interface V0MultiAsset_AllConcreteNonFungible {
-  __kind: 'AllConcreteNonFungible'
-  class: V0MultiLocation
-}
-
-export interface V0MultiAsset_AbstractFungible {
-  __kind: 'AbstractFungible'
-  id: Uint8Array
-  amount: bigint
-}
-
-export interface V0MultiAsset_AbstractNonFungible {
-  __kind: 'AbstractNonFungible'
-  class: Uint8Array
-  instance: V1AssetInstance
-}
-
-export interface V0MultiAsset_ConcreteFungible {
-  __kind: 'ConcreteFungible'
-  id: V0MultiLocation
-  amount: bigint
-}
-
-export interface V0MultiAsset_ConcreteNonFungible {
-  __kind: 'ConcreteNonFungible'
-  class: V0MultiLocation
-  instance: V1AssetInstance
-}
-
-export interface V1MultiAsset {
-  id: V1AssetId
-  fun: V1Fungibility
 }
 
 /**
@@ -3096,6 +3421,128 @@ export interface OutboundState_Suspended {
   __kind: 'Suspended'
 }
 
+export type V1Junction = V1Junction_Parachain | V1Junction_AccountId32 | V1Junction_AccountIndex64 | V1Junction_AccountKey20 | V1Junction_PalletInstance | V1Junction_GeneralIndex | V1Junction_GeneralKey | V1Junction_OnlyChild | V1Junction_Plurality
+
+export interface V1Junction_Parachain {
+  __kind: 'Parachain'
+  value: number
+}
+
+export interface V1Junction_AccountId32 {
+  __kind: 'AccountId32'
+  network: V0NetworkId
+  id: Uint8Array
+}
+
+export interface V1Junction_AccountIndex64 {
+  __kind: 'AccountIndex64'
+  network: V0NetworkId
+  index: bigint
+}
+
+export interface V1Junction_AccountKey20 {
+  __kind: 'AccountKey20'
+  network: V0NetworkId
+  key: Uint8Array
+}
+
+export interface V1Junction_PalletInstance {
+  __kind: 'PalletInstance'
+  value: number
+}
+
+export interface V1Junction_GeneralIndex {
+  __kind: 'GeneralIndex'
+  value: bigint
+}
+
+export interface V1Junction_GeneralKey {
+  __kind: 'GeneralKey'
+  value: Uint8Array
+}
+
+export interface V1Junction_OnlyChild {
+  __kind: 'OnlyChild'
+}
+
+export interface V1Junction_Plurality {
+  __kind: 'Plurality'
+  id: V0BodyId
+  part: V0BodyPart
+}
+
+export type V1AssetId = V1AssetId_Concrete | V1AssetId_Abstract
+
+export interface V1AssetId_Concrete {
+  __kind: 'Concrete'
+  value: V1MultiLocation
+}
+
+export interface V1AssetId_Abstract {
+  __kind: 'Abstract'
+  value: Uint8Array
+}
+
+export type V1Fungibility = V1Fungibility_Fungible | V1Fungibility_NonFungible
+
+export interface V1Fungibility_Fungible {
+  __kind: 'Fungible'
+  value: bigint
+}
+
+export interface V1Fungibility_NonFungible {
+  __kind: 'NonFungible'
+  value: V1AssetInstance
+}
+
+export type V1WildMultiAsset = V1WildMultiAsset_All | V1WildMultiAsset_AllOf
+
+export interface V1WildMultiAsset_All {
+  __kind: 'All'
+}
+
+export interface V1WildMultiAsset_AllOf {
+  __kind: 'AllOf'
+  id: V1AssetId
+  fun: V1WildFungibility
+}
+
+export type V1AssetInstance = V1AssetInstance_Undefined | V1AssetInstance_Index | V1AssetInstance_Array4 | V1AssetInstance_Array8 | V1AssetInstance_Array16 | V1AssetInstance_Array32 | V1AssetInstance_Blob
+
+export interface V1AssetInstance_Undefined {
+  __kind: 'Undefined'
+}
+
+export interface V1AssetInstance_Index {
+  __kind: 'Index'
+  value: bigint
+}
+
+export interface V1AssetInstance_Array4 {
+  __kind: 'Array4'
+  value: Uint8Array
+}
+
+export interface V1AssetInstance_Array8 {
+  __kind: 'Array8'
+  value: Uint8Array
+}
+
+export interface V1AssetInstance_Array16 {
+  __kind: 'Array16'
+  value: Uint8Array
+}
+
+export interface V1AssetInstance_Array32 {
+  __kind: 'Array32'
+  value: Uint8Array
+}
+
+export interface V1AssetInstance_Blob {
+  __kind: 'Blob'
+  value: Uint8Array
+}
+
 export type V0Junction = V0Junction_Parent | V0Junction_Parachain | V0Junction_AccountId32 | V0Junction_AccountIndex64 | V0Junction_AccountKey20 | V0Junction_PalletInstance | V0Junction_GeneralIndex | V0Junction_GeneralKey | V0Junction_OnlyChild | V0Junction_Plurality
 
 export interface V0Junction_Parent {
@@ -3212,28 +3659,6 @@ export interface V0Response_Assets {
   value: V0MultiAsset[]
 }
 
-export type V0OriginKind = V0OriginKind_Native | V0OriginKind_SovereignAccount | V0OriginKind_Superuser | V0OriginKind_Xcm
-
-export interface V0OriginKind_Native {
-  __kind: 'Native'
-}
-
-export interface V0OriginKind_SovereignAccount {
-  __kind: 'SovereignAccount'
-}
-
-export interface V0OriginKind_Superuser {
-  __kind: 'Superuser'
-}
-
-export interface V0OriginKind_Xcm {
-  __kind: 'Xcm'
-}
-
-export interface DoubleEncoded {
-  encoded: Uint8Array
-}
-
 export type V1Order = V1Order_Noop | V1Order_DepositAsset | V1Order_DepositReserveAsset | V1Order_ExchangeAsset | V1Order_InitiateReserveWithdraw | V1Order_InitiateTeleport | V1Order_QueryHolding | V1Order_BuyExecution
 
 export interface V1Order_Noop {
@@ -3301,39 +3726,6 @@ export interface V1Response_Assets {
 export interface V1Response_Version {
   __kind: 'Version'
   value: number
-}
-
-export type V2Response = V2Response_Null | V2Response_Assets | V2Response_ExecutionResult | V2Response_Version
-
-export interface V2Response_Null {
-  __kind: 'Null'
-}
-
-export interface V2Response_Assets {
-  __kind: 'Assets'
-  value: V1MultiAsset[]
-}
-
-export interface V2Response_ExecutionResult {
-  __kind: 'ExecutionResult'
-  value: ([number, V2Error] | undefined)
-}
-
-export interface V2Response_Version {
-  __kind: 'Version'
-  value: number
-}
-
-export type V1MultiAssetFilter = V1MultiAssetFilter_Definite | V1MultiAssetFilter_Wild
-
-export interface V1MultiAssetFilter_Definite {
-  __kind: 'Definite'
-  value: V1MultiAsset[]
-}
-
-export interface V1MultiAssetFilter_Wild {
-  __kind: 'Wild'
-  value: V1WildMultiAsset
 }
 
 export type Type_223 = Type_223_Null | Type_223_DepositAsset | Type_223_DepositReserveAsset | Type_223_ExchangeAsset | Type_223_InitiateReserveWithdraw | Type_223_InitiateTeleport | Type_223_QueryHolding | Type_223_BuyExecution
@@ -3446,116 +3838,6 @@ export interface Type_228_BuyExecution {
   debt: bigint
   haltOnError: boolean
   instructions: Type_226[]
-}
-
-export type V1Junction = V1Junction_Parachain | V1Junction_AccountId32 | V1Junction_AccountIndex64 | V1Junction_AccountKey20 | V1Junction_PalletInstance | V1Junction_GeneralIndex | V1Junction_GeneralKey | V1Junction_OnlyChild | V1Junction_Plurality
-
-export interface V1Junction_Parachain {
-  __kind: 'Parachain'
-  value: number
-}
-
-export interface V1Junction_AccountId32 {
-  __kind: 'AccountId32'
-  network: V0NetworkId
-  id: Uint8Array
-}
-
-export interface V1Junction_AccountIndex64 {
-  __kind: 'AccountIndex64'
-  network: V0NetworkId
-  index: bigint
-}
-
-export interface V1Junction_AccountKey20 {
-  __kind: 'AccountKey20'
-  network: V0NetworkId
-  key: Uint8Array
-}
-
-export interface V1Junction_PalletInstance {
-  __kind: 'PalletInstance'
-  value: number
-}
-
-export interface V1Junction_GeneralIndex {
-  __kind: 'GeneralIndex'
-  value: bigint
-}
-
-export interface V1Junction_GeneralKey {
-  __kind: 'GeneralKey'
-  value: Uint8Array
-}
-
-export interface V1Junction_OnlyChild {
-  __kind: 'OnlyChild'
-}
-
-export interface V1Junction_Plurality {
-  __kind: 'Plurality'
-  id: V0BodyId
-  part: V0BodyPart
-}
-
-export type V1AssetInstance = V1AssetInstance_Undefined | V1AssetInstance_Index | V1AssetInstance_Array4 | V1AssetInstance_Array8 | V1AssetInstance_Array16 | V1AssetInstance_Array32 | V1AssetInstance_Blob
-
-export interface V1AssetInstance_Undefined {
-  __kind: 'Undefined'
-}
-
-export interface V1AssetInstance_Index {
-  __kind: 'Index'
-  value: bigint
-}
-
-export interface V1AssetInstance_Array4 {
-  __kind: 'Array4'
-  value: Uint8Array
-}
-
-export interface V1AssetInstance_Array8 {
-  __kind: 'Array8'
-  value: Uint8Array
-}
-
-export interface V1AssetInstance_Array16 {
-  __kind: 'Array16'
-  value: Uint8Array
-}
-
-export interface V1AssetInstance_Array32 {
-  __kind: 'Array32'
-  value: Uint8Array
-}
-
-export interface V1AssetInstance_Blob {
-  __kind: 'Blob'
-  value: Uint8Array
-}
-
-export type V1AssetId = V1AssetId_Concrete | V1AssetId_Abstract
-
-export interface V1AssetId_Concrete {
-  __kind: 'Concrete'
-  value: V1MultiLocation
-}
-
-export interface V1AssetId_Abstract {
-  __kind: 'Abstract'
-  value: Uint8Array
-}
-
-export type V1Fungibility = V1Fungibility_Fungible | V1Fungibility_NonFungible
-
-export interface V1Fungibility_Fungible {
-  __kind: 'Fungible'
-  value: bigint
-}
-
-export interface V1Fungibility_NonFungible {
-  __kind: 'NonFungible'
-  value: V1AssetInstance
 }
 
 /**
@@ -4706,205 +4988,6 @@ export interface V0BodyPart_MoreThanProportion {
   denom: number
 }
 
-export type V2Error = V2Error_Overflow | V2Error_Unimplemented | V2Error_UntrustedReserveLocation | V2Error_UntrustedTeleportLocation | V2Error_MultiLocationFull | V2Error_MultiLocationNotInvertible | V2Error_BadOrigin | V2Error_InvalidLocation | V2Error_AssetNotFound | V2Error_FailedToTransactAsset | V2Error_NotWithdrawable | V2Error_LocationCannotHold | V2Error_ExceedsMaxMessageSize | V2Error_DestinationUnsupported | V2Error_Transport | V2Error_Unroutable | V2Error_UnknownClaim | V2Error_FailedToDecode | V2Error_MaxWeightInvalid | V2Error_NotHoldingFees | V2Error_TooExpensive | V2Error_Trap | V2Error_UnhandledXcmVersion | V2Error_WeightLimitReached | V2Error_Barrier | V2Error_WeightNotComputable
-
-export interface V2Error_Overflow {
-  __kind: 'Overflow'
-}
-
-export interface V2Error_Unimplemented {
-  __kind: 'Unimplemented'
-}
-
-export interface V2Error_UntrustedReserveLocation {
-  __kind: 'UntrustedReserveLocation'
-}
-
-export interface V2Error_UntrustedTeleportLocation {
-  __kind: 'UntrustedTeleportLocation'
-}
-
-export interface V2Error_MultiLocationFull {
-  __kind: 'MultiLocationFull'
-}
-
-export interface V2Error_MultiLocationNotInvertible {
-  __kind: 'MultiLocationNotInvertible'
-}
-
-export interface V2Error_BadOrigin {
-  __kind: 'BadOrigin'
-}
-
-export interface V2Error_InvalidLocation {
-  __kind: 'InvalidLocation'
-}
-
-export interface V2Error_AssetNotFound {
-  __kind: 'AssetNotFound'
-}
-
-export interface V2Error_FailedToTransactAsset {
-  __kind: 'FailedToTransactAsset'
-}
-
-export interface V2Error_NotWithdrawable {
-  __kind: 'NotWithdrawable'
-}
-
-export interface V2Error_LocationCannotHold {
-  __kind: 'LocationCannotHold'
-}
-
-export interface V2Error_ExceedsMaxMessageSize {
-  __kind: 'ExceedsMaxMessageSize'
-}
-
-export interface V2Error_DestinationUnsupported {
-  __kind: 'DestinationUnsupported'
-}
-
-export interface V2Error_Transport {
-  __kind: 'Transport'
-}
-
-export interface V2Error_Unroutable {
-  __kind: 'Unroutable'
-}
-
-export interface V2Error_UnknownClaim {
-  __kind: 'UnknownClaim'
-}
-
-export interface V2Error_FailedToDecode {
-  __kind: 'FailedToDecode'
-}
-
-export interface V2Error_MaxWeightInvalid {
-  __kind: 'MaxWeightInvalid'
-}
-
-export interface V2Error_NotHoldingFees {
-  __kind: 'NotHoldingFees'
-}
-
-export interface V2Error_TooExpensive {
-  __kind: 'TooExpensive'
-}
-
-export interface V2Error_Trap {
-  __kind: 'Trap'
-  value: bigint
-}
-
-export interface V2Error_UnhandledXcmVersion {
-  __kind: 'UnhandledXcmVersion'
-}
-
-export interface V2Error_WeightLimitReached {
-  __kind: 'WeightLimitReached'
-  value: bigint
-}
-
-export interface V2Error_Barrier {
-  __kind: 'Barrier'
-}
-
-export interface V2Error_WeightNotComputable {
-  __kind: 'WeightNotComputable'
-}
-
-export type V1WildMultiAsset = V1WildMultiAsset_All | V1WildMultiAsset_AllOf
-
-export interface V1WildMultiAsset_All {
-  __kind: 'All'
-}
-
-export interface V1WildMultiAsset_AllOf {
-  __kind: 'AllOf'
-  id: V1AssetId
-  fun: V1WildFungibility
-}
-
-export interface DispatchInfo {
-  weight: bigint
-  class: DispatchClass
-  paysFee: Pays
-}
-
-export type DispatchError = DispatchError_Other | DispatchError_CannotLookup | DispatchError_BadOrigin | DispatchError_Module | DispatchError_ConsumerRemaining | DispatchError_NoProviders | DispatchError_TooManyConsumers | DispatchError_Token | DispatchError_Arithmetic | DispatchError_Transactional
-
-export interface DispatchError_Other {
-  __kind: 'Other'
-}
-
-export interface DispatchError_CannotLookup {
-  __kind: 'CannotLookup'
-}
-
-export interface DispatchError_BadOrigin {
-  __kind: 'BadOrigin'
-}
-
-export interface DispatchError_Module {
-  __kind: 'Module'
-  value: ModuleError
-}
-
-export interface DispatchError_ConsumerRemaining {
-  __kind: 'ConsumerRemaining'
-}
-
-export interface DispatchError_NoProviders {
-  __kind: 'NoProviders'
-}
-
-export interface DispatchError_TooManyConsumers {
-  __kind: 'TooManyConsumers'
-}
-
-export interface DispatchError_Token {
-  __kind: 'Token'
-  value: TokenError
-}
-
-export interface DispatchError_Arithmetic {
-  __kind: 'Arithmetic'
-  value: ArithmeticError
-}
-
-export interface DispatchError_Transactional {
-  __kind: 'Transactional'
-  value: TransactionalError
-}
-
-export type BalanceStatus = BalanceStatus_Free | BalanceStatus_Reserved
-
-export interface BalanceStatus_Free {
-  __kind: 'Free'
-}
-
-export interface BalanceStatus_Reserved {
-  __kind: 'Reserved'
-}
-
-export type V2Outcome = V2Outcome_Complete | V2Outcome_Incomplete | V2Outcome_Error
-
-export interface V2Outcome_Complete {
-  __kind: 'Complete'
-  value: bigint
-}
-
-export interface V2Outcome_Incomplete {
-  __kind: 'Incomplete'
-  value: [bigint, V2Error]
-}
-
-export interface V2Outcome_Error {
-  __kind: 'Error'
-  value: V2Error
-}
-
 export type V1WildFungibility = V1WildFungibility_Fungible | V1WildFungibility_NonFungible
 
 export interface V1WildFungibility_Fungible {
@@ -4913,87 +4996,4 @@ export interface V1WildFungibility_Fungible {
 
 export interface V1WildFungibility_NonFungible {
   __kind: 'NonFungible'
-}
-
-export type DispatchClass = DispatchClass_Normal | DispatchClass_Operational | DispatchClass_Mandatory
-
-export interface DispatchClass_Normal {
-  __kind: 'Normal'
-}
-
-export interface DispatchClass_Operational {
-  __kind: 'Operational'
-}
-
-export interface DispatchClass_Mandatory {
-  __kind: 'Mandatory'
-}
-
-export type Pays = Pays_Yes | Pays_No
-
-export interface Pays_Yes {
-  __kind: 'Yes'
-}
-
-export interface Pays_No {
-  __kind: 'No'
-}
-
-export interface ModuleError {
-  index: number
-  error: Uint8Array
-}
-
-export type TokenError = TokenError_NoFunds | TokenError_WouldDie | TokenError_BelowMinimum | TokenError_CannotCreate | TokenError_UnknownAsset | TokenError_Frozen | TokenError_Unsupported
-
-export interface TokenError_NoFunds {
-  __kind: 'NoFunds'
-}
-
-export interface TokenError_WouldDie {
-  __kind: 'WouldDie'
-}
-
-export interface TokenError_BelowMinimum {
-  __kind: 'BelowMinimum'
-}
-
-export interface TokenError_CannotCreate {
-  __kind: 'CannotCreate'
-}
-
-export interface TokenError_UnknownAsset {
-  __kind: 'UnknownAsset'
-}
-
-export interface TokenError_Frozen {
-  __kind: 'Frozen'
-}
-
-export interface TokenError_Unsupported {
-  __kind: 'Unsupported'
-}
-
-export type ArithmeticError = ArithmeticError_Underflow | ArithmeticError_Overflow | ArithmeticError_DivisionByZero
-
-export interface ArithmeticError_Underflow {
-  __kind: 'Underflow'
-}
-
-export interface ArithmeticError_Overflow {
-  __kind: 'Overflow'
-}
-
-export interface ArithmeticError_DivisionByZero {
-  __kind: 'DivisionByZero'
-}
-
-export type TransactionalError = TransactionalError_LimitReached | TransactionalError_NoLayer
-
-export interface TransactionalError_LimitReached {
-  __kind: 'LimitReached'
-}
-
-export interface TransactionalError_NoLayer {
-  __kind: 'NoLayer'
 }

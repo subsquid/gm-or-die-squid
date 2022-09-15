@@ -26,6 +26,42 @@ export class Account {
 
   @Index_()
   @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  burnedForGM!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  burnedForGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  burnedForGMGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  burnedForNothing!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  burnedTotal!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceGMGN!: bigint
+
+  @Column_("text", {nullable: true})
+  display!: string | undefined | null
+
+  @Column_("text", {nullable: true})
+  discord!: string | undefined | null
+
+  @Column_("text", {nullable: true})
+  twitter!: string | undefined | null
+
+  @Column_("bool", {nullable: true})
+  verified!: boolean | undefined | null
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
   sentGM!: bigint
 
   @Index_()
@@ -50,27 +86,15 @@ export class Account {
 
   @Index_()
   @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  burnedForGM!: bigint
-
-  @Index_()
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  burnedForGN!: bigint
-
-  @Index_()
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  burnedForGMGN!: bigint
-
-  @Index_()
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  burnedForNothing!: bigint
-
-  @Index_()
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  burnedTotal!: bigint
-
-  @Index_()
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
   balanceGM!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceFrozenGM!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceReservedGM!: bigint
 
   @Index_()
   @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
@@ -78,21 +102,29 @@ export class Account {
 
   @Index_()
   @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  balanceGMGN!: bigint
+  balanceFrozenGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceReservedGN!: bigint
 
   @Index_()
   @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
   balanceFREN!: bigint
 
-  @Column_("text", {nullable: true})
-  display!: string | undefined | null
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceFreeFREN!: bigint
 
-  @Column_("text", {nullable: true})
-  discord!: string | undefined | null
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceReservedFREN!: bigint
 
-  @Column_("text", {nullable: true})
-  twitter!: string | undefined | null
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceMiscFrozenFREN!: bigint
 
-  @Column_("bool", {nullable: true})
-  verified!: boolean | undefined | null
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceFeeFrozenFREN!: bigint
 }

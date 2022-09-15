@@ -11,6 +11,7 @@ import { getParsedEventsData } from './mappers/common';
 import { Account, Transfer, FrenBurned } from './model';
 import SquidCache from './utils/squid-cache';
 import { handleTransfers } from './mappers/transfer';
+import { handleAccountIdentityUpdates } from './mappers/account';
 import {
   TransferEventData,
   BlockEventName,
@@ -25,7 +26,8 @@ const addEventDataConfig = {
       args: true,
       extrinsic: {
         hash: true,
-        fee: true
+        fee: true,
+        signature: true
       }
     }
   }
@@ -42,19 +44,15 @@ const processor = new SubstrateBatchProcessor()
     }),
     chain: 'wss://ws.gm.bldnodes.org'
   })
-  /**
-   * An account was created with some free balance. (Only GM | GN)
-   */
   .addEvent('Tokens.Endowed', addEventDataConfig)
   .addEvent('Currencies.FrenBurned', addEventDataConfig)
-  /**
-   * Transfer succeeded. (only GM | GN tokens)
-   */
   .addEvent('Tokens.Transfer', addEventDataConfig)
-  /**
-   * Transfer succeeded. (only FREN token)
-   */
-  .addEvent('Balances.Transfer', addEventDataConfig);
+  .addEvent('Balances.Transfer', addEventDataConfig)
+  .addEvent('Balances.Endowed', addEventDataConfig)
+  .addEvent('Identity.IdentitySet', addEventDataConfig)
+  .addEvent('Identity.IdentityKilled', addEventDataConfig)
+  .addEvent('Identity.IdentityCleared', addEventDataConfig)
+  .addEvent('Identity.JudgementGiven', addEventDataConfig);
 
 type Item = BatchProcessorItem<typeof processor>;
 export type Ctx = BatchContext<Store, Item>;
@@ -64,16 +62,12 @@ processor.run(new TypeormDatabase(), async (ctx) => {
   const parsedEvents = getParsedEventsData(ctx);
   await SquidCache.load();
 
-  handleTransfers(
-    parsedEvents.get(BlockEventName.TRANSFER) as
-      | Set<TransferEventData>
-      | undefined
-  );
+  handleTransfers(parsedEvents.get<TransferEventData>(BlockEventName.TRANSFER));
   handleFrenBurned(
-    parsedEvents.get(BlockEventName.FREN_BURNED) as
-      | Set<FrenBurnedEventData>
-      | undefined
+    parsedEvents.get<FrenBurnedEventData>(BlockEventName.FREN_BURNED)
   );
+  await handleAccountIdentityUpdates(ctx, parsedEvents);
+
   await SquidCache.flush();
   SquidCache.purge();
 });

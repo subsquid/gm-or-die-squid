@@ -2,9 +2,6 @@ import { Store, EntityClass } from '@subsquid/typeorm-store';
 import { In, FindOptionsWhere } from 'typeorm';
 import assert from 'assert';
 import { BatchContext } from '@subsquid/substrate-processor';
-// import { FindManyOptions } from '@subsquid/typeorm-store/src/store'
-// import type { FindOptionsRelations, FindOneOptions } from 'typeorm'
-// import { FindOneOptions, EntityClass } from '@subsquid/typeorm-store';
 
 type EntityLike = {
     id: string;
