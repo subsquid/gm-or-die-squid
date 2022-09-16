@@ -7,10 +7,9 @@ import {
   IdentityIdentityKilledEvent,
   IdentityIdentitySetEvent,
   IdentityJudgementGivenEvent,
-  TokensEndowedEvent,
   TokensTransferEvent
 } from '../types/events';
-import { Account, Currency } from '../model';
+import { Account, AccountBalance, Currency } from '../model';
 import {
   TransferEventData,
   BlockEventName,
@@ -23,6 +22,15 @@ import {
   ParsedEventsDataScope
 } from '../utils/common';
 import SquidCache from '../utils/squid-cache';
+import { getAccountBalanceId } from './accountBalance';
+
+function addAccountBalancesToDeferredLoad(accId: string) {
+  SquidCache.deferredLoad(AccountBalance, [
+    getAccountBalanceId(accId, Currency.FREN),
+    getAccountBalanceId(accId, Currency.GM),
+    getAccountBalanceId(accId, Currency.GN)
+  ]);
+}
 
 export function getParsedEventsData(ctx: Ctx): ParsedEventsDataScope {
   const parsedData = new ParsedEventsDataScope();
@@ -38,6 +46,8 @@ export function getParsedEventsData(ctx: Ctx): ParsedEventsDataScope {
             gmOrDieAddressSs58ToString(account)
           );
           SquidCache.deferredLoad(Account, gmOrDieAddressSs58ToString(account));
+          addAccountBalancesToDeferredLoad(gmOrDieAddressSs58ToString(account));
+
           break;
         }
         case 'Identity.IdentitySet': {
@@ -48,6 +58,8 @@ export function getParsedEventsData(ctx: Ctx): ParsedEventsDataScope {
             gmOrDieAddressSs58ToString(who)
           );
           SquidCache.deferredLoad(Account, gmOrDieAddressSs58ToString(who));
+          addAccountBalancesToDeferredLoad(gmOrDieAddressSs58ToString(who));
+
           break;
         }
         case 'Identity.IdentityKilled': {
@@ -58,6 +70,8 @@ export function getParsedEventsData(ctx: Ctx): ParsedEventsDataScope {
             gmOrDieAddressSs58ToString(who)
           );
           SquidCache.deferredLoad(Account, gmOrDieAddressSs58ToString(who));
+          addAccountBalancesToDeferredLoad(gmOrDieAddressSs58ToString(who));
+
           break;
         }
         case 'Identity.IdentityCleared': {
@@ -68,6 +82,8 @@ export function getParsedEventsData(ctx: Ctx): ParsedEventsDataScope {
             gmOrDieAddressSs58ToString(who)
           );
           SquidCache.deferredLoad(Account, gmOrDieAddressSs58ToString(who));
+          addAccountBalancesToDeferredLoad(gmOrDieAddressSs58ToString(who));
+
           break;
         }
         case 'Identity.JudgementGiven': {
@@ -78,6 +94,7 @@ export function getParsedEventsData(ctx: Ctx): ParsedEventsDataScope {
             gmOrDieAddressSs58ToString(target)
           );
           SquidCache.deferredLoad(Account, gmOrDieAddressSs58ToString(target));
+          addAccountBalancesToDeferredLoad(gmOrDieAddressSs58ToString(target));
           break;
         }
 
@@ -101,6 +118,8 @@ export function getParsedEventsData(ctx: Ctx): ParsedEventsDataScope {
             tokenTransfer.from,
             tokenTransfer.to
           ]);
+          addAccountBalancesToDeferredLoad(tokenTransfer.from);
+          addAccountBalancesToDeferredLoad(tokenTransfer.to);
 
           break;
         }
@@ -123,6 +142,8 @@ export function getParsedEventsData(ctx: Ctx): ParsedEventsDataScope {
             tokenTransfer.from,
             tokenTransfer.to
           ]);
+          addAccountBalancesToDeferredLoad(tokenTransfer.from);
+          addAccountBalancesToDeferredLoad(tokenTransfer.to);
 
           break;
         }
@@ -140,6 +161,7 @@ export function getParsedEventsData(ctx: Ctx): ParsedEventsDataScope {
           };
           parsedData.set(BlockEventName.FREN_BURNED, frenBurned);
           SquidCache.deferredLoad(Account, frenBurned.accountId);
+          addAccountBalancesToDeferredLoad(frenBurned.accountId);
 
           break;
         }

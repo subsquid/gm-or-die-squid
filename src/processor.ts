@@ -8,10 +8,10 @@ import {
 import { Store, TypeormDatabase } from '@subsquid/typeorm-store';
 import { In } from 'typeorm';
 import { getParsedEventsData } from './mappers/common';
-import { Account, Transfer, FrenBurned } from './model';
+import { Account, Transfer, FrenBurned, AccountBalance } from './model';
 import SquidCache from './utils/squid-cache';
 import { handleTransfers } from './mappers/transfer';
-import { handleAccountIdentityUpdates } from './mappers/account';
+import { handleAccountIdentityBalanceUpdates } from './mappers/account';
 import {
   TransferEventData,
   BlockEventName,
@@ -58,7 +58,7 @@ type Item = BatchProcessorItem<typeof processor>;
 export type Ctx = BatchContext<Store, Item>;
 
 processor.run(new TypeormDatabase(), async (ctx) => {
-  SquidCache.init(ctx, [Account, Transfer, FrenBurned]);
+  SquidCache.init(ctx, [Account, Transfer, FrenBurned, AccountBalance]);
   const parsedEvents = getParsedEventsData(ctx);
   await SquidCache.load();
 
@@ -66,7 +66,7 @@ processor.run(new TypeormDatabase(), async (ctx) => {
   handleFrenBurned(
     parsedEvents.get<FrenBurnedEventData>(BlockEventName.FREN_BURNED)
   );
-  await handleAccountIdentityUpdates(ctx, parsedEvents);
+  await handleAccountIdentityBalanceUpdates(ctx, parsedEvents);
 
   await SquidCache.flush();
   SquidCache.purge();

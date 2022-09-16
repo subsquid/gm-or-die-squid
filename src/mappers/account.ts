@@ -1,14 +1,13 @@
-import { Account } from '../model';
+import { Account, Currency } from '../model';
 import SquidCache from '../utils/squid-cache';
 import {
+  IdentityIdentityOfStorage,
   SystemAccountStorage,
-  TokensAccountsStorage,
-  IdentityIdentityOfStorage
+  TokensAccountsStorage
 } from '../types/storage';
 import {
   BlockEventName,
   FrenBurnedEventData,
-  ParsedEventsDataMap,
   TransferEventData
 } from '../utils/types';
 import {
@@ -17,6 +16,7 @@ import {
 } from '../utils/common';
 import { getIdentity } from '../utils/getIdentity';
 import { Ctx } from '../processor';
+import { getOrCreateAccountBalance } from './accountBalance';
 
 export function getOrCreateAccount(id: string): Account {
   let acc = SquidCache.get(Account, id);
@@ -34,10 +34,6 @@ export function getOrCreateAccount(id: string): Account {
       burnedForGMGN: BigInt(0),
       burnedForNothing: BigInt(0),
       burnedTotal: BigInt(0),
-      balanceFREN: BigInt(0),
-      balanceGM: BigInt(0),
-      balanceGN: BigInt(0),
-      balanceGMGN: BigInt(0)
     });
 
     SquidCache.upsert(acc);
@@ -45,7 +41,7 @@ export function getOrCreateAccount(id: string): Account {
   return acc;
 }
 
-export async function handleAccountIdentityUpdates(
+export async function handleAccountIdentityBalanceUpdates(
   ctx: Ctx,
   parsedData: ParsedEventsDataScope
 ): Promise<void> {
@@ -118,22 +114,31 @@ export async function handleAccountIdentityUpdates(
       const gmData = gmDataValue[i];
       const gnData = gnDataValues[i];
 
-      account.balanceFREN = frenData.data.free + frenData.data.reserved;
-      account.balanceFreeFREN = frenData.data.free;
-      account.balanceReservedFREN = frenData.data.reserved;
-      account.balanceMiscFrozenFREN = frenData.data.miscFrozen;
-      account.balanceFeeFrozenFREN = frenData.data.feeFrozen;
+      const accBalanceFREN = getOrCreateAccountBalance(account, Currency.FREN);
+      const accBalanceGM = getOrCreateAccountBalance(account, Currency.GM);
+      const accBalanceGN = getOrCreateAccountBalance(account, Currency.GN);
 
-      account.balanceGM = gmData.free + gmData.reserved + gmData.frozen;
-      account.balanceFrozenGM = gmData.frozen;
-      account.balanceReservedGM = gmData.reserved;
+      accBalanceFREN.total = frenData.data.free + frenData.data.reserved;
+      accBalanceFREN.free = frenData.data.free;
+      accBalanceFREN.reserved = frenData.data.reserved;
+      accBalanceFREN.miscFrozen = frenData.data.miscFrozen;
+      accBalanceFREN.feeFrozen = frenData.data.feeFrozen;
 
-      account.balanceGN = gnData.free + gnData.reserved + gnData.frozen;
-      account.balanceFrozenGN = gnData.frozen;
-      account.balanceReservedGN = gnData.reserved;
+      accBalanceGM.total = gmData.free + gmData.reserved + gmData.frozen;
+      accBalanceGM.free = gmData.free;
+      accBalanceGM.frozen = gmData.frozen;
+      accBalanceGM.reserved = gmData.reserved;
 
-      account.balanceGMGN = account.balanceGM + account.balanceGN;
+      accBalanceGN.total = gnData.free + gnData.reserved + gnData.frozen;
+      accBalanceGN.free = gnData.free;
+      accBalanceGN.frozen = gnData.frozen;
+      accBalanceGN.reserved = gnData.reserved;
+
+      SquidCache.upsert(accBalanceFREN);
+      SquidCache.upsert(accBalanceGM);
+      SquidCache.upsert(accBalanceGN);
     }
+
     if (identityOfDataValues) {
       const identity = identityOfDataValues[i];
       const { display, discord, twitter, verified } = getIdentity(identity);
