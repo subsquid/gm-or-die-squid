@@ -3,4 +3,4 @@
 Squid for the most necessary Kusama [parachain](https://www.gmordie.com/) yet.
 
 
-User archive - https://gmordie.archive.subsquid.io/graphql
+Used archive - https://gmordie.archive.subsquid.io/graphql
