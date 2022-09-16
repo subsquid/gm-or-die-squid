@@ -1,8 +1,55 @@
+enum Currency {
+  FREN
+  GM
+  GN
+}
+
+enum BurnedReward {
+  GM
+  GN
+}
+
 type Account @entity {
   "Account address"
   id: ID!
   transfersTo: [Transfer!] @derivedFrom(field: "to")
   transfersFrom: [Transfer!] @derivedFrom(field: "from")
+  frenBurnedEvents: [FrenBurned!] @derivedFrom(field: "account")
+
+  burnedForGM: BigInt! @index
+  burnedForGN: BigInt! @index
+  burnedForGMGN: BigInt! @index
+  burnedForNothing: BigInt! @index
+  burnedTotal: BigInt! @index
+  balanceGMGN: BigInt! @index
+
+  #  balances: [AccountBalance!] @derivedFrom(field: "account")
+
+  display: String
+  discord: String
+  twitter: String
+  verified: Boolean
+
+  sentGM: BigInt! @index
+  sentGN: BigInt! @index
+  sentGMGN: BigInt! @index
+  receivedGM: BigInt! @index
+  receivedGN: BigInt! @index
+  receivedGMGN: BigInt! @index
+
+  balanceGM: BigInt! @index
+  balanceFrozenGM: BigInt! @index
+  balanceReservedGM: BigInt! @index
+
+  balanceGN: BigInt! @index
+  balanceFrozenGN: BigInt! @index
+  balanceReservedGN: BigInt! @index
+
+  balanceFREN: BigInt! @index
+  balanceFreeFREN: BigInt! @index
+  balanceReservedFREN: BigInt! @index
+  balanceMiscFrozenFREN: BigInt! @index
+  balanceFeeFrozenFREN: BigInt! @index
 }
 
 type Transfer @entity {
@@ -12,6 +59,27 @@ type Transfer @entity {
   extrinsicHash: String @index
   from: Account!
   to: Account!
+  currency: Currency!
   amount: BigInt! @index
-  fee: BigInt! # fee is calculated at the best effort and may be zero for some old extrinsics
+  fee: BigInt!
 }
+
+type FrenBurned @entity {
+  id: ID!
+  account: Account!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  burnedAmount: BigInt! @index
+  burnedFor: BurnedReward
+}
+
+#type AccountBalance @entity {
+#  "Currency name FREN | GM | GN"
+#  id: ID!
+#  account: Account!
+#  free: BigInt! @index
+#  reserved: BigInt! @index
+#  frozen: BigInt! @index
+#  total: BigInt! @index
+#}

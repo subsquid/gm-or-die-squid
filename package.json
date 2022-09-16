@@ -1,14 +1,17 @@
 {
   "name": "gm-or-die-tokens",
   "private": true,
-  "engines" : { 
-    "node" : ">=16"
+  "engines": {
+    "node": ">=16"
   },
   "scripts": {
     "build": "rm -rf lib && tsc",
     "db:migrate": "npx squid-typeorm-migration apply",
+    "db:reset": ". ./scripts/reset-db.sh",
+    "db:soft-reset": ". ./scripts/soft-reset-db.sh",
     "processor:start": "node lib/processor.js",
-    "query-node:start": "squid-graphql-server --subscriptions"
+    "query-node:start": "squid-graphql-server --subscriptions",
+    "watch": "yarn chokidar \"src/**/*\" \"typegen\" -c 'yarn build'"
   },
   "dependencies": {
     "@subsquid/archive-registry": "1.0.12",
@@ -27,6 +30,16 @@
     "@subsquid/substrate-metadata-explorer": "1.0.6",
     "@subsquid/substrate-typegen": "1.2.2",
     "@types/node": "16.11.56",
-    "typescript": "4.8.2"
+    "typescript": "4.8.2",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-type-graphql": "^0.3.2",
+    "chokidar-cli": "^3.0.0",
+    "prettier": "^2.6.2"
   }
 }

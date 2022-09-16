@@ -1,14 +1,19 @@
-version: "3"
+version: '3'
 
 services:
   db:
-    container_name: gm_or_die_tokens_db
-    image: postgres:14
+    container_name: gmordie_squid_db
+    image: postgres:12
     environment:
-      POSTGRES_DB: squid
-      POSTGRES_PASSWORD: squid
+      #      POSTGRES_DB: squid
+      #      POSTGRES_PASSWORD: squid
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     ports:
-      - "${DB_PORT}:5432"
+      - '${DB_PORT}:5432'
+    env_file:
+      - .env
       # command: ["postgres", "-c", "log_statement=all"]
 #    volumes:
 #      - ./data/db:/var/lib/postgresql/data

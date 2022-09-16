@@ -1,5 +1,7 @@
-import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToMany as OneToMany_} from "typeorm"
+import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToMany as OneToMany_, Index as Index_} from "typeorm"
+import * as marshal from "./marshal"
 import {Transfer} from "./transfer.model"
+import {FrenBurned} from "./frenBurned.model"
 
 @Entity_()
 export class Account {
@@ -18,4 +20,111 @@ export class Account {
 
   @OneToMany_(() => Transfer, e => e.from)
   transfersFrom!: Transfer[]
+
+  @OneToMany_(() => FrenBurned, e => e.account)
+  frenBurnedEvents!: FrenBurned[]
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  burnedForGM!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  burnedForGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  burnedForGMGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  burnedForNothing!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  burnedTotal!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceGMGN!: bigint
+
+  @Column_("text", {nullable: true})
+  display!: string | undefined | null
+
+  @Column_("text", {nullable: true})
+  discord!: string | undefined | null
+
+  @Column_("text", {nullable: true})
+  twitter!: string | undefined | null
+
+  @Column_("bool", {nullable: true})
+  verified!: boolean | undefined | null
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  sentGM!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  sentGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  sentGMGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  receivedGM!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  receivedGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  receivedGMGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceGM!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceFrozenGM!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceReservedGM!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceFrozenGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceReservedGN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceFREN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceFreeFREN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceReservedFREN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceMiscFrozenFREN!: bigint
+
+  @Index_()
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+  balanceFeeFrozenFREN!: bigint
 }
