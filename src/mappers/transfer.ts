@@ -5,11 +5,13 @@ import {
   FrenBurnedEventData,
   BurnedReward
 } from '../utils/types';
-import SquidCache from '../utils/squid-cache/index';
+// import { ProcessorCache as SquidCache } from '@subsquid/processor-tools';
+import { Ctx } from '../processor';
 import { Transfer, Currency } from '../model';
 import { getOrCreateAccount } from './account';
 
-export function handleTransfers(
+export async function handleTransfers(
+  ctx: Ctx,
   transactionEventsData: Set<TransferEventData> | undefined
 ) {
   if (!transactionEventsData) return;
@@ -27,22 +29,10 @@ export function handleTransfers(
       currencyId
     } = transferData;
 
-    const fromAcc = getOrCreateAccount(from);
-    const toAcc = getOrCreateAccount(to);
+    const fromAcc = await getOrCreateAccount(ctx, from);
+    const toAcc = await getOrCreateAccount(ctx, to);
 
-    SquidCache.upsert(
-      new Transfer({
-        id,
-        blockNumber,
-        timestamp,
-        extrinsicHash,
-        from: fromAcc,
-        to: toAcc,
-        currency: Currency[currencyId],
-        amount,
-        fee
-      })
-    );
+
 
     if (currencyId === Currency.GM) {
       fromAcc.sentGM += amount;
@@ -56,7 +46,21 @@ export function handleTransfers(
       toAcc.receivedGMGN += amount;
     }
 
-    SquidCache.upsert(fromAcc);
-    SquidCache.upsert(toAcc);
+    ctx.store.deferredUpsert(
+      new Transfer({
+        id,
+        blockNumber,
+        timestamp,
+        extrinsicHash,
+        from: fromAcc,
+        to: toAcc,
+        currency: Currency[currencyId],
+        amount,
+        fee
+      })
+    );
+
+    ctx.store.deferredUpsert(fromAcc);
+    ctx.store.deferredUpsert(toAcc);
   }
 }

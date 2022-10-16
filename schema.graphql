@@ -9,34 +9,6 @@ enum BurnedReward {
   GN
 }
 
-type Account @entity {
-  "Account address"
-  id: ID!
-  transfersTo: [Transfer!] @derivedFrom(field: "to")
-  transfersFrom: [Transfer!] @derivedFrom(field: "from")
-  frenBurnedEvents: [FrenBurned!] @derivedFrom(field: "account")
-
-  sentGM: BigInt! @index
-  sentGN: BigInt! @index
-  sentGMGN: BigInt! @index
-  receivedGM: BigInt! @index
-  receivedGN: BigInt! @index
-  receivedGMGN: BigInt! @index
-
-  burnedForGM: BigInt! @index
-  burnedForGN: BigInt! @index
-  burnedForGMGN: BigInt! @index
-  burnedForNothing: BigInt! @index
-  burnedTotal: BigInt! @index
-
-  balances: [AccountBalance!] @derivedFrom(field: "account")
-
-  display: String
-  discord: String
-  twitter: String
-  verified: Boolean
-}
-
 type Transfer @entity {
   id: ID!
   blockNumber: Int! @index
@@ -72,3 +44,658 @@ type AccountBalance @entity {
   feeFrozen: BigInt @index # only for FREN
   total: BigInt @index
 }
+
+type Account @entity {
+  "Account address"
+  id: ID!
+  accProps: AccountProps
+  secondaryProps: SecondaryProps
+  transfersTo: [Transfer!] @derivedFrom(field: "to")
+  transfersFrom: [Transfer!] @derivedFrom(field: "from")
+  frenBurnedEvents: [FrenBurned!] @derivedFrom(field: "account")
+
+  sentGM: BigInt! @index
+  sentGN: BigInt! @index
+  sentGMGN: BigInt! @index
+  receivedGM: BigInt! @index
+  receivedGN: BigInt! @index
+  receivedGMGN: BigInt! @index
+
+  burnedForGM: BigInt! @index
+  burnedForGN: BigInt! @index
+  burnedForGMGN: BigInt! @index
+  burnedForNothing: BigInt! @index
+  burnedTotal: BigInt! @index
+
+  balances: [AccountBalance!] @derivedFrom(field: "account")
+
+  display: String
+  discord: String
+  twitter: String
+  verified: Boolean
+}
+
+type AccountProps @entity {
+  id: ID!
+  name: String!
+  someProp: String!
+  number: Int
+  wrongRelP: Account!
+}
+
+type SecondaryProps @entity {
+  name: String!
+  someProp: String!
+  number: Int
+  wrongRel: Account!
+}
+
+# ##### ======= Demo content ======= #####
+#
+#enum EventName {
+#  PostCreated
+#  PostDeleted # synthetic
+#  PostUpdated
+#  PostShared # synthetic
+#  PostMoved
+#
+#  PostReactionCreated
+#  PostReactionUpdated
+#  PostReactionDeleted
+#
+#  SpaceCreated
+#  SpaceUpdated
+#  SpaceFollowed
+#  SpaceUnfollowed
+#  AccountFollowed
+#  AccountUnfollowed
+#  ProfileUpdated
+#
+#  CommentCreated # synthetic
+#  CommentDeleted # synthetic
+#  CommentUpdated # synthetic
+#  CommentShared # synthetic
+#  CommentReactionCreated # synthetic
+#  CommentReactionUpdated # synthetic
+#  CommentReactionDeleted # synthetic
+#
+#  CommentReplyCreated # synthetic
+#  CommentReplyDeleted # synthetic
+#  CommentReplyUpdated # synthetic
+#  CommentReplyShared # synthetic
+#  CommentReplyReactionCreated # synthetic
+#  CommentReplyReactionUpdated # synthetic
+#  CommentReplyReactionDeleted # synthetic
+#}
+#
+#enum PostKind {
+#  Comment
+#  SharedPost
+#  RegularPost
+#}
+#enum ReactionKind {
+#  Upvote
+#  Downvote
+#}
+#
+#enum Status {
+#  Active
+#  Deleted
+#}
+#
+#type Account @entity {
+#  id: ID!
+#  profileSpace: Space
+#
+#  followers: [AccountFollowers]! @derivedFrom(field: "followingAccount")
+#  followersCount: Int!
+#
+#  followingAccounts: [AccountFollowers]! @derivedFrom(field: "followerAccount")
+#  followingAccountsCount: Int!
+#
+#  posts: [Post] @derivedFrom(field: "createdByAccount")
+#  followingPostsCount: Int!
+#
+#  spacesCreated: [Space!] @derivedFrom(field: "createdByAccount")
+#  spacesOwned: [Space!] @derivedFrom(field: "ownedByAccount")
+#  spacesFollowed: [SpaceFollowers!] @derivedFrom(field: "followerAccount")
+#  followingSpacesCount: Int!
+#
+#  feeds: [NewsFeed]! @derivedFrom(field: "account")
+#  notifications: [Notification]! @derivedFrom(field: "account")
+#  activities: [Activity]! @derivedFrom(field: "account")
+#  reactions: [Reaction]! @derivedFrom(field: "account")
+#
+#  updatedAtTime: DateTime
+#  updatedAtBlock: BigInt
+#}
+#
+#type Post @entity  {
+#  id: ID!
+#  parentPost: Post
+#  rootPost: Post
+#  sharedPost: Post
+#  isComment: Boolean! @index
+#  hidden: Boolean! @index
+#
+#  ownedByAccount: Account!
+#  createdByAccount: Account!
+#  createdAtBlock: BigInt
+#  createdAtTime: DateTime @index
+#  createdOnDay: DateTime
+#  updatedAtTime: DateTime
+#  space: Space
+#  kind: PostKind @index
+#
+#  postFollowers: [PostFollowers] @derivedFrom(field: "followingPost")
+#  commentFollowers: [CommentFollowers] @derivedFrom(field: "followingComment")
+#  followersCount: Int! @index
+#
+#  repliesCount: Int!
+#  publicRepliesCount: Int! @index
+#  hiddenRepliesCount: Int!
+#  sharesCount: Int! @index
+#  upvotesCount: Int! @index
+#  downvotesCount: Int! @index
+#  reactionsCount: Int! @index
+#  reactions: [Reaction] @derivedFrom(field: "post")
+#  #  score: Int
+#
+#  title: String
+#  image: String
+#  link: String
+#  canonical: String
+#  content: String
+#  slug: String
+#  body: String
+#  summary: String
+#  meta: String
+#  tagsOriginal: String
+#  format: String
+#
+#  proposalIndex: Int # postContent.meta[0]
+#}
+#
+#type Reaction @entity {
+#  id: ID!
+#  post: Post!
+#  account: Account!
+#  kind: ReactionKind! @index
+#  status: Status! @index
+#  createdAtBlock: BigInt!
+#  createdAtTime: DateTime!
+#  updatedAtBlock: BigInt
+#  updatedAtTime: DateTime
+#}
+#
+#type Space @entity {
+#  id: ID!
+#  createdByAccount: Account!
+#  ownedByAccount: Account!
+#  profileSpace: Account
+#  infoPost: Post
+#
+#  createdAtBlock: BigInt
+#  createdAtTime: DateTime @index
+#  createdOnDay: DateTime
+#  updatedAtTime: DateTime
+#  updatedAtBlock: BigInt
+#
+#  posts: [Post]! @derivedFrom(field: "space")
+#  postsCount: Int!
+#  publicPostsCount: Int! @index
+#  hiddenPostsCount: Int!
+#
+#  hidden: Boolean! @index
+#  content: String
+#  name: String
+#  image: String
+#  about: String
+#  summary: String
+#  email: String
+#  tagsOriginal: String
+#  linksOriginal: String
+#  format: String
+#
+#  canFollowerCreatePosts: Boolean
+#  canEveryoneCreatePosts: Boolean
+#
+#  nonePermissions: SpacePermissions
+#  everyonePermissions: SpacePermissions
+#  followerPermissions: SpacePermissions
+#  spaceOwnerPermissions: SpacePermissions
+#
+#  followersCount: Int! @index
+#  followers: [SpaceFollowers]! @derivedFrom(field: "followingSpace")
+#}
+#
+#type Activity @entity {
+#  id: ID!
+#  account: Account!
+#  blockNumber: BigInt!
+#  eventIndex: Int!
+#  event: EventName! @index
+#  followingAccount: Account
+#  space: Space
+#  spacePrev: Space
+#  post: Post
+#  reaction: Reaction
+#  date: DateTime!
+#  aggregated: Boolean @index
+#  aggCount: BigInt!
+#}
+#
+#type AccountFollowers @entity {
+#  followerAccount: Account!
+#  followingAccount: Account!
+#}
+#
+#type SpaceFollowers @entity {
+#  followerAccount: Account!
+#  followingSpace: Space!
+#}
+#
+#type PostFollowers @entity {
+#  followerAccount: Account!
+#  followingPost: Post!
+#}
+#
+#type CommentFollowers @entity {
+#  followerAccount: Account!
+#  followingComment: Post!
+#}
+#
+#type NewsFeed @entity {
+#  account: Account!
+#  activity: Activity!
+#}
+#
+#type Notification @entity {
+#  account: Account!
+#  activity: Activity!
+#}
+#
+#type SpacePermissions {
+#  manageRoles: Boolean
+#  representSpaceInternally: Boolean
+#  representSpaceExternally: Boolean
+#  updateSpace: Boolean
+#  createSubspaces: Boolean
+#  updateOwnSubspaces: Boolean
+#  deleteOwnSubspaces: Boolean
+#  hideOwnSubspaces: Boolean
+#  updateAnySubspace: Boolean
+#  deleteAnySubspace: Boolean
+#  hideAnySubspace: Boolean
+#  createPosts: Boolean
+#  updateOwnPosts: Boolean
+#  deleteOwnPosts: Boolean
+#  hideOwnPosts: Boolean
+#  updateAnyPost: Boolean
+#  deleteAnyPost: Boolean
+#  hideAnyPost: Boolean
+#  createComments: Boolean
+#  updateOwnComments: Boolean
+#  deleteOwnComments: Boolean
+#  hideOwnComments: Boolean
+#  hideAnyComment: Boolean
+#  upvote: Boolean
+#  downvote: Boolean
+#  share: Boolean
+#  overrideSubspacePermissions: Boolean
+#  overridePostPermissions: Boolean
+#  suggestEntityStatus: Boolean
+#  updateEntityStatus: Boolean
+#  updateSpaceSettings: Boolean
+#}
+
+
+
+### ==========================
+#
+#type Account @entity {
+#  id: ID!
+#  transfers: [AccountTransfer!] @derivedFrom(field: "account")
+#  crowdloans: [Contributor!] @derivedFrom(field: "account") # crowdloans there account get participation
+#  rewards: [Reward!] @derivedFrom(field: "account")
+#  slashes: [Slash!] @derivedFrom(field: "account")
+#  bonds: [Bond!] @derivedFrom(field: "account")
+#  stakingInfo: Staker @derivedFrom(field: "stash")
+#  #RMRK nfts
+#  rmrkColections: [RmrkCollection!] @derivedFrom(field: "currentOwner")
+#  rmrkNfts: [RmrkNFT!] @derivedFrom(field: "currentOwner")
+#  rmrkEvents: [RmrkEvent!] @derivedFrom(field: "account")
+#
+#  syncedAt: Int!
+#}
+#### RMRK1 NFTs ###
+#
+#type RmrkCollection @entity {
+#  name: String
+#  max: Int!
+#  issuer: String!
+#  symbol: String
+#  id: ID!
+#  metadata: String
+#  currentOwner: Account
+#  nfts: [RmrkNFT!] @derivedFrom(field: "collection")
+#  events: [RmrkEvent!] @derivedFrom(field: "collection")
+#  blockNumber: BigInt
+#  createdAt: DateTime!
+#}
+#
+#type RmrkNFT @entity {
+#  name: String
+#  instance: String
+#  transferable: Int
+#  collection: RmrkCollection!
+#  issuer: String
+#  sn: String
+#  id: ID!
+#  metadata: String
+#  currentOwner: Account
+#  price: BigInt!
+#  burned: Boolean!
+#  blockNumber: Int!
+#  events: [RmrkEvent!] @derivedFrom(field: "nft")
+#  emotes: [RmrkEmote!] @derivedFrom(field: "nft")
+#  createdAt: DateTime!
+#  updatedAt: DateTime!
+#}
+#
+#type RmrkMetadata @entity {
+#  id: ID!
+#  name: String
+#  description: String
+#  image: String
+#  attributes: [RmrkAttribute!]
+#  animationUrl: String
+#  type: String
+#}
+#
+#type RmrkAttribute @jsonField {
+#  display: String
+#  trait: String
+#  value: String!
+#}
+#
+#type RmrkEvent @entity {
+#  id: ID!
+#  blockNumber: Int!
+#  timestamp: DateTime!
+#  account: Account
+#  info: BigInt # If list or buy
+#  interaction: RmrkInteraction!
+#  nft: RmrkNFT # if nft interaction
+#  collection: RmrkCollection # if collection interaction
+#  emotion: RmrkEmote # if emote
+#}
+#
+#type RmrkEmote @entity {
+#  id: ID!
+#  nft: RmrkNFT!
+#  caller: Account!
+#  value: String!
+#  lastEmotion: DateTime!
+#  count: Int!
+#  active: Boolean!
+#}
+#
+#enum RmrkInteraction {
+#  MINT
+#  MINTNFT
+#  LIST
+#  UNLIST
+#  BUY
+#  SEND
+#  CONSUME
+#  CHANGEISSUER
+#  EMOTE
+#}
+#
+#
+#### STAKING ###
+#
+#enum StakingRole {
+#  Validator
+#  Nominator
+#  Idle
+#}
+#
+#enum PayeeType {
+#  Staked
+#  Stash
+#  Controller
+#  Account
+#  None
+#}
+#
+## current information about stash, controller, payee and staking role
+#type Staker @entity {
+#  id: ID! #stash Id
+#  stashId: ID!
+#  stash: Account! @unique
+#  controllerId: ID
+#  controller: Account
+#  payeeId: ID
+#  payee: Account
+#  payeeType: PayeeType
+#  role: StakingRole
+#  commission: Int
+#  activeBond: BigInt! # current bond balance
+#  totalReward: BigInt!
+#  totalSlash: BigInt!
+#  stakerHistory: [EraStaker!] @derivedFrom(field: "staker") # staker history for each era
+#  rewards: [Reward!] @derivedFrom(field: "staker")
+#  slashes: [Slash!] @derivedFrom(field: "staker")
+#  bonds: [Bond!] @derivedFrom(field: "staker")
+#
+#  syncedAt: Int!
+#}
+#
+## information about era, validators and nominators
+#type Era @entity {
+#  id: ID!
+#  index: Int!
+#  timestamp: DateTime!
+#  startedAt: Int!
+#  endedAt: Int
+#  total: BigInt!
+#  validatorsCount: Int!
+#  nominatorsCount: Int!
+#  stakers: [EraStaker] @derivedFrom(field: "era")
+#}
+#
+#type EraNomination @entity {
+#  id: ID! #era + validatorId + nominatorId
+#  era: Era!
+#  nominator: EraStaker
+#  validator: EraStaker
+#  vote: BigInt!
+#}
+#
+## information about validator in era: self/total bond, nominators and their votes
+#type EraStaker @entity {
+#  id: ID! #era + stashId
+#  stakerId: ID!
+#  staker: Staker!
+#  era: Era!
+#  role: StakingRole!
+#  selfBonded: BigInt!
+#  totalBonded: BigInt!
+#  totalReward: BigInt!
+#  totalSlash: BigInt!
+#  commission: Int
+#  nominators: [EraNomination!] @derivedFrom(field: "validator")
+#  validators: [EraNomination!] @derivedFrom(field: "nominator")
+#}
+#
+## information about known parachains and their crowdloans
+#type Parachain @entity {
+#  id: ID! #paraId
+#  crowdloans: [Crowdloan!] @derivedFrom(field: "parachain")
+#}
+#
+#enum CrowdloanStatus {
+#  Started
+#  Ended
+#  Dissolved
+#}
+#
+#enum TransferDirection {
+#  From
+#  To
+#}
+#
+#type Contributor @entity {
+#  id: ID!
+#  crowdloanId: ID
+#  crowdloan: Crowdloan
+#  accountId: ID!
+#  account: Account!
+#  amount: BigInt!
+#  contributions: [Contribution] @derivedFrom(field: "contributor")
+#}
+#
+#type Contribution @entity {
+#  id: ID!
+#  crowdloanId: ID
+#  crowdloan: Crowdloan
+#  accountId: ID!
+#  account: Account!
+#  amount: BigInt!
+#  contributorId: ID
+#  contributor: Contributor
+#}
+#
+#type Crowdloan @entity {
+#  id: ID!
+#  cap: BigInt!
+#  firstPeriod: Int!
+#  lastPeriod: Int!
+#  createdAt: Int
+#  createdAtTimestamp: DateTime
+#  endedAt: Int @index
+#  endedAtTimestamp: DateTime
+#  contributors: [Contributor!] @derivedFrom(field: "crowdloan")
+#  raised: BigInt!
+#  parachainId: ID
+#  parachain: Parachain
+#  status: CrowdloanStatus!
+#  syncedAt: Int!
+#}
+#
+#interface Action {
+#  timestamp: DateTime
+#  blockNumber: Int
+#  extrinsicHash: String
+#}
+#
+#type Transfer @entity {
+#  id: ID!
+#  blockNumber: Int! @index
+#  timestamp: DateTime! @index
+#  extrinsicHash: String @index
+#  fromId: ID!
+#  from: Account!
+#  toId: ID!
+#  to: Account!
+#  amount: BigInt! @index
+#}
+#
+#type XcmTransfer @entity {
+#  id: ID!
+#  timestamp: DateTime!
+#  blockNumber: Int! @index
+#  extrinsicHash: String! @index
+#  to: TransferLocation
+#  from: TransferLocation!
+#  asset: TransferAsset!
+#  type: TransferType!
+#}
+#
+#union TransferLocation = TransferLocationAccount | TransferLocationEvm | TransferLocationXcm
+#
+#type TransferLocationAccount {
+#  id: String!
+#}
+#
+#type TransferLocationEvm {
+#  address: String!
+#}
+#
+#union TransferAsset = TransferAssetToken | TransferAssetMultiToken
+#
+#enum TransferType {
+#  Native
+#  Contribution
+#  Xcm
+#}
+#
+#type TransferAssetToken {
+#  symbol: String
+#  amount: BigInt
+#}
+#
+#type TransferAssetMultiToken {
+#  tokens: [TransferAssetToken]
+#}
+#
+#type TransferLocationXcm {
+#  id: String
+#  paraId: Int
+#}
+#
+## entity for linking account and transfer
+#type AccountTransfer @entity {
+#  id: ID!
+#  transfer: Transfer
+#  accountId: ID!
+#  account: Account!
+#  direction: TransferDirection
+#}
+#
+#type Reward @entity  {
+#  id: ID!
+#  timestamp: DateTime
+#  blockNumber: Int @index
+#  extrinsicHash: String @index
+#  accountId: ID
+#  account: Account
+#  amount: BigInt!
+#  era: Int
+#  validatorId: ID
+#  stakerId: ID!
+#  staker: Staker!
+#}
+#
+#type Slash @entity  {
+#  id: ID!
+#  timestamp: DateTime
+#  blockNumber: Int @index
+#  extrinsicHash: String @index
+#  accountId: ID!
+#  account: Account!
+#  amount: BigInt!
+#  era: Int
+#  stakerId: ID!
+#  staker: Staker
+#}
+#
+#enum BondType {
+#  Bond
+#  Unbond
+#}
+#
+#type Bond @entity  {
+#  id: ID!
+#  timestamp: DateTime
+#  blockNumber: Int @index
+#  extrinsicHash: String @index
+#  accountId: ID!
+#  account: Account!
+#  amount: BigInt
+#  type: BondType
+#  stakerId: ID!
+#  staker: Staker
+#}

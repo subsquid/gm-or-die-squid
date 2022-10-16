@@ -1,5 +1,6 @@
 import { Account, Currency } from '../model';
-import SquidCache from '../utils/squid-cache';
+// import { ProcessorCache as SquidCache } from '@subsquid/processor-tools';
+
 import {
   IdentityIdentityOfStorage,
   SystemAccountStorage,
@@ -18,8 +19,12 @@ import { getIdentity } from '../utils/getIdentity';
 import { Ctx } from '../processor';
 import { getOrCreateAccountBalance } from './accountBalance';
 
-export function getOrCreateAccount(id: string): Account {
-  let acc = SquidCache.get(Account, id);
+export async function getOrCreateAccount(
+  ctx: Ctx,
+  id: string
+): Promise<Account> {
+  let acc = await ctx.store.get(Account, id);
+
   if (acc == null) {
     acc = new Account({
       id: id,
@@ -33,10 +38,11 @@ export function getOrCreateAccount(id: string): Account {
       burnedForGN: BigInt(0),
       burnedForGMGN: BigInt(0),
       burnedForNothing: BigInt(0),
-      burnedTotal: BigInt(0),
+      burnedTotal: BigInt(0)
     });
 
-    SquidCache.upsert(acc);
+
+    ctx.store.deferredUpsert(acc);
   }
   return acc;
 }
@@ -51,8 +57,8 @@ export async function handleAccountIdentityBalanceUpdates(
   for (const transfer of parsedData
     .get<TransferEventData>(BlockEventName.TRANSFER)
     .values()) {
-    involvedAccounts.set(transfer.from, getOrCreateAccount(transfer.from));
-    involvedAccounts.set(transfer.to, getOrCreateAccount(transfer.to));
+    involvedAccounts.set(transfer.from, await getOrCreateAccount(ctx, transfer.from));
+    involvedAccounts.set(transfer.to, await getOrCreateAccount(ctx, transfer.to));
   }
 
   for (const burnedEvent of parsedData
@@ -60,14 +66,14 @@ export async function handleAccountIdentityBalanceUpdates(
     .values()) {
     involvedAccounts.set(
       burnedEvent.accountId,
-      getOrCreateAccount(burnedEvent.accountId)
+      await getOrCreateAccount(ctx, burnedEvent.accountId)
     );
   }
 
   for (const accountId of parsedData
     .get<string>(BlockEventName.IDENTITY)
     .values()) {
-    involvedAccounts.set(accountId, getOrCreateAccount(accountId));
+    involvedAccounts.set(accountId, await getOrCreateAccount(ctx, accountId));
   }
 
   const involvedAccountsList = [...involvedAccounts.values()];
@@ -114,9 +120,13 @@ export async function handleAccountIdentityBalanceUpdates(
       const gmData = gmDataValue[i];
       const gnData = gnDataValues[i];
 
-      const accBalanceFREN = getOrCreateAccountBalance(account, Currency.FREN);
-      const accBalanceGM = getOrCreateAccountBalance(account, Currency.GM);
-      const accBalanceGN = getOrCreateAccountBalance(account, Currency.GN);
+      const accBalanceFREN = await getOrCreateAccountBalance(
+        ctx,
+        account,
+        Currency.FREN
+      );
+      const accBalanceGM = await getOrCreateAccountBalance(ctx, account, Currency.GM);
+      const accBalanceGN = await getOrCreateAccountBalance(ctx, account, Currency.GN);
 
       accBalanceFREN.total = frenData.data.free + frenData.data.reserved;
       accBalanceFREN.free = frenData.data.free;
@@ -134,9 +144,12 @@ export async function handleAccountIdentityBalanceUpdates(
       accBalanceGN.frozen = gnData.frozen;
       accBalanceGN.reserved = gnData.reserved;
 
-      SquidCache.upsert(accBalanceFREN);
-      SquidCache.upsert(accBalanceGM);
-      SquidCache.upsert(accBalanceGN);
+      // SquidCache.upsert(accBalanceFREN);
+      // SquidCache.upsert(accBalanceGM);
+      // SquidCache.upsert(accBalanceGN);
+      ctx.store.deferredUpsert(accBalanceFREN);
+      ctx.store.deferredUpsert(accBalanceGM);
+      ctx.store.deferredUpsert(accBalanceGN);
     }
 
     if (identityOfDataValues) {
@@ -149,7 +162,7 @@ export async function handleAccountIdentityBalanceUpdates(
       account.verified = verified;
     }
     if (frenDataValues && gmDataValue && gnDataValues && identityOfDataValues) {
-      SquidCache.upsert(account);
+      ctx.store.deferredUpsert(account);
     }
   }
 }

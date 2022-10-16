@@ -1,0 +1,314 @@
+{
+  "Transfer": {
+    "kind": "entity",
+    "properties": {
+      "id": {
+        "type": { "kind": "scalar", "name": "ID" },
+        "nullable": false,
+        "description": undefined
+      },
+      "blockNumber": {
+        "type": { "kind": "scalar", "name": "Int" },
+        "nullable": false,
+        "description": undefined
+      },
+      "timestamp": {
+        "type": { "kind": "scalar", "name": "DateTime" },
+        "nullable": false,
+        "description": undefined
+      },
+      "extrinsicHash": {
+        "type": { "kind": "scalar", "name": "String" },
+        "nullable": true,
+        "description": undefined
+      },
+      "from": {
+        "type": { "kind": "fk", "entity": "Account" },
+        "nullable": false,
+        "unique": false,
+        "description": undefined
+      },
+      "to": {
+        "type": { "kind": "fk", "entity": "Account" },
+        "nullable": false,
+        "unique": false,
+        "description": undefined
+      },
+      "currency": {
+        "type": { "kind": "enum", "name": "Currency" },
+        "nullable": false,
+        "description": undefined
+      },
+      "amount": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "fee": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      }
+    },
+    "description": undefined,
+    "interfaces": [],
+    "indexes": [
+      { "fields": [{ "name": "blockNumber" }], "unique": false },
+      { "fields": [{ "name": "timestamp" }], "unique": false },
+      { "fields": [{ "name": "extrinsicHash" }], "unique": false },
+      { "fields": [{ "name": "amount" }], "unique": false }
+    ]
+  },
+  "Currency": {
+    "kind": "enum",
+    "values": { "FREN": {}, "GM": {}, "GN": {} },
+    "description": undefined
+  },
+  "FrenBurned": {
+    "kind": "entity",
+    "properties": {
+      "id": {
+        "type": { "kind": "scalar", "name": "ID" },
+        "nullable": false,
+        "description": undefined
+      },
+      "account": {
+        "type": { "kind": "fk", "entity": "Account" },
+        "nullable": false,
+        "unique": false,
+        "description": undefined
+      },
+      "blockNumber": {
+        "type": { "kind": "scalar", "name": "Int" },
+        "nullable": false,
+        "description": undefined
+      },
+      "timestamp": {
+        "type": { "kind": "scalar", "name": "DateTime" },
+        "nullable": false,
+        "description": undefined
+      },
+      "extrinsicHash": {
+        "type": { "kind": "scalar", "name": "String" },
+        "nullable": true,
+        "description": undefined
+      },
+      "burnedAmount": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "burnedFor": {
+        "type": { "kind": "enum", "name": "BurnedReward" },
+        "nullable": true,
+        "description": undefined
+      }
+    },
+    "description": undefined,
+    "interfaces": [],
+    "indexes": [
+      { "fields": [{ "name": "blockNumber" }], "unique": false },
+      { "fields": [{ "name": "timestamp" }], "unique": false },
+      { "fields": [{ "name": "extrinsicHash" }], "unique": false },
+      { "fields": [{ "name": "burnedAmount" }], "unique": false }
+    ]
+  },
+  "BurnedReward": {
+    "kind": "enum",
+    "values": { "GM": {}, "GN": {} },
+    "description": undefined
+  },
+  "AccountBalance": {
+    "kind": "entity",
+    "properties": {
+      "id": {
+        "type": { "kind": "scalar", "name": "ID" },
+        "nullable": false,
+        "description": "< FREN|GM|GN >-< accountId >"
+      },
+      "currency": {
+        "type": { "kind": "enum", "name": "Currency" },
+        "nullable": false,
+        "description": undefined
+      },
+      "account": {
+        "type": { "kind": "fk", "entity": "Account" },
+        "nullable": false,
+        "unique": false,
+        "description": undefined
+      },
+      "free": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "reserved": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "frozen": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": true,
+        "description": undefined
+      },
+      "miscFrozen": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": true,
+        "description": undefined
+      },
+      "feeFrozen": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": true,
+        "description": undefined
+      },
+      "total": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": true,
+        "description": undefined
+      }
+    },
+    "description": undefined,
+    "interfaces": [],
+    "indexes": [
+      { "fields": [{ "name": "free" }], "unique": false },
+      { "fields": [{ "name": "reserved" }], "unique": false },
+      { "fields": [{ "name": "frozen" }], "unique": false },
+      { "fields": [{ "name": "miscFrozen" }], "unique": false },
+      { "fields": [{ "name": "feeFrozen" }], "unique": false },
+      { "fields": [{ "name": "total" }], "unique": false }
+    ]
+  },
+  "Account": {
+    "kind": "entity",
+    "properties": {
+      "id": {
+        "type": { "kind": "scalar", "name": "ID" },
+        "nullable": false,
+        "description": "Account address"
+      },
+      "transfersTo": {
+        "type": { "kind": "list-lookup", "entity": "Transfer", "field": "to" },
+        "nullable": false,
+        "description": undefined
+      },
+      "transfersFrom": {
+        "type": {
+          "kind": "list-lookup",
+          "entity": "Transfer",
+          "field": "from"
+        },
+        "nullable": false,
+        "description": undefined
+      },
+      "frenBurnedEvents": {
+        "type": {
+          "kind": "list-lookup",
+          "entity": "FrenBurned",
+          "field": "account"
+        },
+        "nullable": false,
+        "description": undefined
+      },
+      "sentGM": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "sentGN": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "sentGMGN": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "receivedGM": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "receivedGN": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "receivedGMGN": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "burnedForGM": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "burnedForGN": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "burnedForGMGN": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "burnedForNothing": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "burnedTotal": {
+        "type": { "kind": "scalar", "name": "BigInt" },
+        "nullable": false,
+        "description": undefined
+      },
+      "balances": {
+        "type": {
+          "kind": "list-lookup",
+          "entity": "AccountBalance",
+          "field": "account"
+        },
+        "nullable": false,
+        "description": undefined
+      },
+      "display": {
+        "type": { "kind": "scalar", "name": "String" },
+        "nullable": true,
+        "description": undefined
+      },
+      "discord": {
+        "type": { "kind": "scalar", "name": "String" },
+        "nullable": true,
+        "description": undefined
+      },
+      "twitter": {
+        "type": { "kind": "scalar", "name": "String" },
+        "nullable": true,
+        "description": undefined
+      },
+      "verified": {
+        "type": { "kind": "scalar", "name": "Boolean" },
+        "nullable": true,
+        "description": undefined
+      }
+    },
+    "description": undefined,
+    "interfaces": [],
+    "indexes": [
+      { "fields": [{ "name": "sentGM" }], "unique": false },
+      { "fields": [{ "name": "sentGN" }], "unique": false },
+      { "fields": [{ "name": "sentGMGN" }], "unique": false },
+      { "fields": [{ "name": "receivedGM" }], "unique": false },
+      { "fields": [{ "name": "receivedGN" }], "unique": false },
+      { "fields": [{ "name": "receivedGMGN" }], "unique": false },
+      { "fields": [{ "name": "burnedForGM" }], "unique": false },
+      { "fields": [{ "name": "burnedForGN" }], "unique": false },
+      { "fields": [{ "name": "burnedForGMGN" }], "unique": false },
+      { "fields": [{ "name": "burnedForNothing" }], "unique": false },
+      { "fields": [{ "name": "burnedTotal" }], "unique": false }
+    ]
+  }
+}

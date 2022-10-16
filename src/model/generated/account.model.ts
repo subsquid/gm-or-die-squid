@@ -1,5 +1,7 @@
-import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToMany as OneToMany_, Index as Index_} from "typeorm"
+import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_, OneToMany as OneToMany_} from "typeorm"
 import * as marshal from "./marshal"
+import {AccountProps} from "./accountProps.model"
+import {SecondaryProps} from "./secondaryProps.model"
 import {Transfer} from "./transfer.model"
 import {FrenBurned} from "./frenBurned.model"
 import {AccountBalance} from "./accountBalance.model"
@@ -15,6 +17,14 @@ export class Account {
    */
   @PrimaryColumn_()
   id!: string
+
+  @Index_()
+  @ManyToOne_(() => AccountProps, {nullable: true})
+  accProps!: AccountProps | undefined | null
+
+  @Index_()
+  @ManyToOne_(() => SecondaryProps, {nullable: true})
+  secondaryProps!: SecondaryProps | undefined | null
 
   @OneToMany_(() => Transfer, e => e.to)
   transfersTo!: Transfer[]

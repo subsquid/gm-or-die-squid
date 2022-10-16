@@ -5,11 +5,10 @@ import {
   BatchProcessorItem,
   SubstrateBatchProcessor
 } from '@subsquid/substrate-processor';
-import { Store, TypeormDatabase } from '@subsquid/typeorm-store';
 import { In } from 'typeorm';
 import { getParsedEventsData } from './mappers/common';
 import { Account, Transfer, FrenBurned, AccountBalance } from './model';
-import SquidCache from './utils/squid-cache';
+import { TypeormDatabase, Store } from '@subsquid/processor-tools';
 import { handleTransfers } from './mappers/transfer';
 import { handleAccountIdentityBalanceUpdates } from './mappers/account';
 import {
@@ -19,6 +18,8 @@ import {
   BurnedReward
 } from './utils/types';
 import { handleFrenBurned } from './mappers/frenBurned';
+import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
+import { ForeignKeyMetadata } from 'typeorm/metadata/ForeignKeyMetadata';
 
 const addEventDataConfig = {
   data: {
@@ -58,16 +59,25 @@ type Item = BatchProcessorItem<typeof processor>;
 export type Ctx = BatchContext<Store, Item>;
 
 processor.run(new TypeormDatabase(), async (ctx) => {
-  SquidCache.init(ctx, [Account, Transfer, FrenBurned, AccountBalance]);
   const parsedEvents = getParsedEventsData(ctx);
-  await SquidCache.load();
+  await ctx.store.load();
 
-  handleTransfers(parsedEvents.get<TransferEventData>(BlockEventName.TRANSFER));
-  handleFrenBurned(
+  await handleTransfers(
+    ctx,
+    parsedEvents.get<TransferEventData>(BlockEventName.TRANSFER)
+  );
+  await handleFrenBurned(
+    ctx,
     parsedEvents.get<FrenBurnedEventData>(BlockEventName.FREN_BURNED)
   );
   await handleAccountIdentityBalanceUpdates(ctx, parsedEvents);
 
-  await SquidCache.flush();
-  SquidCache.purge();
+  // for (const [name, list] of ctx.store.entries()) {
+  //   console.log(`------${name.name}-----`);
+  //   console.dir(Object.fromEntries(list), { depth: null });
+  // }
+  // console.log(ctx.store.cacheValues(Transfer));
+
+  // await ctx.store.flush();
+  // await ctx.store.purge();
 });

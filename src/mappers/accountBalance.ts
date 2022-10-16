@@ -1,16 +1,18 @@
 import { AccountBalance, Account, Currency } from '../model';
-import SquidCache from '../utils/squid-cache';
+// import { ProcessorCache as SquidCache } from '@subsquid/processor-tools';
+import { Ctx } from '../processor';
 
 export function getAccountBalanceId(accId: string, currency: Currency) {
   return `${accId}-${currency}`;
 }
 
-export function getOrCreateAccountBalance(
+export async function getOrCreateAccountBalance(
+  ctx: Ctx,
   acc: Account,
   currency: Currency
-): AccountBalance {
+): Promise<AccountBalance> {
   const accBalanceId = getAccountBalanceId(acc.id, currency);
-  let accBalance = SquidCache.get(AccountBalance, accBalanceId);
+  let accBalance = await ctx.store.get(AccountBalance, accBalanceId);
 
   if (accBalance == null) {
     accBalance = new AccountBalance({
@@ -25,7 +27,7 @@ export function getOrCreateAccountBalance(
       total: BigInt(0)
     });
 
-    SquidCache.upsert(accBalance);
+    ctx.store.deferredUpsert(accBalance);
   }
   return accBalance;
 }

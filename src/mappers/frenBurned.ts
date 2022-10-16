@@ -5,13 +5,16 @@ import {
   FrenBurnedEventData,
   BurnedReward as BurnedRewardType
 } from '../utils/types';
-import SquidCache from '../utils/squid-cache/index';
+// import { ProcessorCache as SquidCache } from '@subsquid/processor-tools';
+import { Ctx } from '../processor';
+
 import { FrenBurned, Currency, BurnedReward } from '../model';
 import { getOrCreateAccount } from './account';
 
-export function handleFrenBurned(
+export async function handleFrenBurned(
+  ctx: Ctx,
   frenBurnedEventsData: Set<FrenBurnedEventData> | undefined
-) {
+): Promise<void> {
   if (!frenBurnedEventsData) return;
 
   for (const frenBurnedData of frenBurnedEventsData.values()) {
@@ -25,11 +28,12 @@ export function handleFrenBurned(
       burnedFor
     } = frenBurnedData;
 
-    const account = getOrCreateAccount(accountId);
+    const account = await getOrCreateAccount(ctx, accountId);
 
-    SquidCache.upsert(
+    ctx.store.deferredUpsert(
       new FrenBurned({
         id,
+        account,
         blockNumber,
         timestamp,
         extrinsicHash,
@@ -52,6 +56,6 @@ export function handleFrenBurned(
     }
     account.burnedTotal += burnedAmount;
 
-    SquidCache.upsert(account);
+    ctx.store.deferredUpsert(account);
   }
 }
