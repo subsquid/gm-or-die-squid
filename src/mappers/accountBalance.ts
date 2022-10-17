@@ -12,7 +12,7 @@ export async function getOrCreateAccountBalance(
   currency: Currency
 ): Promise<AccountBalance> {
   const accBalanceId = getAccountBalanceId(acc.id, currency);
-  let accBalance = await ctx.store.get(AccountBalance, accBalanceId);
+  let accBalance = await ctx.store.get(AccountBalance, accBalanceId, false);
 
   if (accBalance == null) {
     accBalance = new AccountBalance({

@@ -23,7 +23,7 @@ export async function getOrCreateAccount(
   ctx: Ctx,
   id: string
 ): Promise<Account> {
-  let acc = await ctx.store.get(Account, id);
+  let acc = await ctx.store.get(Account, id, false);
 
   if (acc == null) {
     acc = new Account({
