@@ -42,7 +42,7 @@ const processor = new SubstrateBatchProcessor()
       genesis:
         '0x19a3733beb9cb8a970a308d835599e9005e02dc007a35440e461a451466776f8'
     }),
-    chain: 'wss://kusama.gmordie.com'
+    chain: 'wss://ws-node-gm.terrabiodao.org'
   })
   .addEvent('Tokens.Endowed', addEventDataConfig)
   .addEvent('Currencies.FrenBurned', addEventDataConfig)
